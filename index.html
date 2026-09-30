@@ -1,0 +1,1676 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="From Rules to Agents: an interactive 8-hour AI foundations course with session plan, instructor and trainee notes, activities, tests and certification.">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;-webkit-font-smoothing:antialiased}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>From Rules to Agents</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: sticky top bar; left rail of the ladder-ordered course; reading column with wide activity panels. */
+:root{
+  --bg:#EEF2EF; --surface:#FFFFFF; --surface-2:#E3E9E5; --ink:#15262B; --muted:#56696D; --line:#CFD8D3;
+  --accent:#0C6573; --accent-ink:#FFFFFF; --accent-soft:#D3E9EA;
+  --warm:#B8741A; --warm-soft:#F5E6CB; --good:#2A7A4B; --good-soft:#DAEEE1; --bad:#B03838; --bad-soft:#F6DEDB;
+  --f-display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
+  --f-body:'Atkinson Hyperlegible','Segoe UI',system-ui,-apple-system,sans-serif;
+  --f-mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E1618; --surface:#152124; --surface-2:#1C2B2F; --ink:#E2EBE8; --muted:#97A9AA; --line:#2A3A3E;
+  --accent:#55BCC8; --accent-ink:#052428; --accent-soft:#163A40;
+  --warm:#E4A64C; --warm-soft:#382A13; --good:#5EC48B; --good-soft:#14301F; --bad:#EE7C7C; --bad-soft:#3B1B1B; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1618; --surface:#152124; --surface-2:#1C2B2F; --ink:#E2EBE8; --muted:#97A9AA; --line:#2A3A3E;
+  --accent:#55BCC8; --accent-ink:#052428; --accent-soft:#163A40;
+  --warm:#E4A64C; --warm-soft:#382A13; --good:#5EC48B; --good-soft:#14301F; --bad:#EE7C7C; --bad-soft:#3B1B1B; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.58}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+h1,h2,h3,h4{font-family:var(--f-display);line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(30px,4.6vw,46px);font-weight:800;letter-spacing:-.02em}
+h2{font-size:clamp(22px,3vw,28px);font-weight:700;letter-spacing:-.01em}
+h3{font-size:20px;font-weight:700}
+h4{font-size:16px;font-weight:700}
+p{margin:0}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.num,.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+button{font:inherit;color:inherit;cursor:pointer}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+textarea{width:100%;resize:vertical;min-height:70px}
+input[type=range]{padding:0;border:0;background:transparent;accent-color:var(--accent);width:100%}
+input[type=checkbox]{accent-color:var(--accent);width:18px;height:18px}
+
+/* Top bar */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+.topbar-in{max-width:1300px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:baseline;gap:10px;margin-right:auto;min-width:0}
+.brand b{font-family:var(--f-display);font-weight:800;font-size:19px;letter-spacing:-.01em}
+.brand span{font-size:13px;color:var(--muted)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;background:var(--surface)}
+.seg button{border:0;background:transparent;padding:5px 14px;border-radius:999px;font-size:14px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.prog{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.prog-bar{width:90px;height:6px;border-radius:6px;background:var(--surface-2);overflow:hidden}
+.prog-bar i{display:block;height:100%;background:var(--accent)}
+
+/* Shell */
+.shell{max-width:1300px;margin:0 auto;padding-inline:20px;display:grid;grid-template-columns:268px minmax(0,1fr);gap:40px}
+.rail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 58px);align-self:start;max-height:calc(100vh - 70px);overflow:auto;padding-block:26px 40px}
+.rail h4{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:18px 0 6px 10px}
+.rail h4:first-child{margin-top:0}
+.rail a{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:6px;align-items:center;padding:7px 10px;border-radius:8px;text-decoration:none;color:var(--ink);font-size:14.5px;line-height:1.3}
+.rail a:hover{background:var(--surface-2)}
+.rail a[aria-current="page"]{background:var(--surface);box-shadow:0 0 0 1px var(--line)}
+.rail a .c{font-family:var(--f-mono);font-size:11.5px;color:var(--muted)}
+.rail a[aria-current="page"] .c{color:var(--accent);font-weight:600}
+.rail a .t{font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.rail a .done{color:var(--good);font-size:13px}
+.rail .brk{font-family:var(--f-mono);font-size:11px;color:var(--muted);padding:2px 10px 2px 50px;opacity:.8}
+.mobile-nav{display:none}
+main{padding-block:30px 90px;min-width:0}
+@media (max-width:900px){
+  .shell{grid-template-columns:minmax(0,1fr);gap:0}
+  .rail{display:none}
+  .mobile-nav{display:block;padding-top:14px}
+  .mobile-nav select{width:100%}
+  .brand span{display:none}
+}
+
+/* Page blocks */
+.page{display:flex;flex-direction:column;gap:28px}
+.col{max-width:760px}
+.lede{font-size:19px;line-height:1.5}
+.prose{display:flex;flex-direction:column;gap:14px;max-width:720px}
+.prose h3{margin-top:14px}
+.prose ul,.prose ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}
+.prose blockquote{margin:6px 0;padding:14px 18px;background:var(--warm-soft);border-radius:var(--r);font-family:var(--f-display);font-size:20px;font-weight:700;line-height:1.3}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px}
+.panel.flat{background:transparent}
+.label{display:inline-block;font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:5px;background:var(--surface-2);color:var(--muted)}
+.label.acc{background:var(--accent-soft);color:var(--accent)}
+.label.warm{background:var(--warm-soft);color:var(--warm)}
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.btn{border:1px solid var(--ink);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:8px;font-weight:700;font-size:15px}
+.btn:hover{opacity:.9}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{background:var(--surface-2)}
+.btn.acc{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.tbl-wrap{overflow-x:auto;max-width:100%}
+table{border-collapse:collapse;width:100%}
+table.mini{font-size:14.5px}
+table.mini th,table.mini td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+table.mini th{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+table.mini td.num{text-align:right}
+
+/* Module header */
+.mhead{display:flex;flex-direction:column;gap:12px}
+.mhead .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.minilad{display:flex;gap:4px;align-items:flex-end;height:30px}
+.minilad i{display:block;width:14px;border-radius:3px 3px 0 0;background:var(--surface-2)}
+.minilad i.on{background:var(--accent)}
+.minilad i.past{background:var(--accent-soft)}
+.obj{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
+
+/* Tabs */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);overflow-x:auto}
+.tabs button{border:0;background:transparent;padding:10px 14px;font-weight:700;font-size:15px;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tabs button.inst{color:var(--warm)}
+.tabs button.inst[aria-selected="true"]{border-bottom-color:var(--warm);color:var(--warm)}
+[data-mode="trainee"] .inst-only{display:none!important}
+[data-mode="instructor"] .trainee-hint{display:none}
+
+/* Flip diagram */
+.flip{display:flex;flex-direction:column;gap:10px;padding:16px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
+.flip-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.flip-tag{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);width:92px}
+.flip .box{padding:6px 12px;border-radius:7px;background:var(--surface-2);font-weight:700;font-size:15px}
+.flip .box.strong{background:var(--accent);color:var(--accent-ink)}
+.flip .op{color:var(--muted);font-family:var(--f-mono)}
+
+/* Example & terms */
+.example{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:10px;max-width:760px}
+.example p+p{margin-top:4px}
+dl.terms{display:grid;grid-template-columns:minmax(140px,220px) minmax(0,1fr);gap:0;margin:0;max-width:760px}
+dl.terms dt,dl.terms dd{padding:10px 0;border-bottom:1px solid var(--line);margin:0}
+dl.terms dt{font-weight:700;padding-right:14px}
+@media (max-width:560px){dl.terms{grid-template-columns:minmax(0,1fr)} dl.terms dt{border:0;padding-bottom:0}}
+.takeaways{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;max-width:760px}
+.takeaways li{display:grid;grid-template-columns:26px minmax(0,1fr);gap:8px}
+.takeaways li::before{content:"✓";color:var(--good);font-weight:700}
+
+/* Instructor */
+.inst-wrap{display:flex;flex-direction:column;gap:22px;max-width:820px}
+.inst-banner{background:var(--warm-soft);border-radius:var(--r);padding:14px 18px;display:flex;gap:10px;flex-wrap:wrap;align-items:baseline}
+.inst-banner b{color:var(--warm);font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.ros td:first-child{font-family:var(--f-mono);white-space:nowrap;color:var(--warm);font-weight:600;width:70px}
+.inst-list{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.say li{font-style:italic}
+
+/* Quiz */
+.quiz{display:flex;flex-direction:column;gap:16px;max-width:780px}
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:12px}
+.qcard .qn{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.qcard .qq{font-weight:700;font-size:17px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;border:1px solid var(--line);background:var(--bg);padding:10px 14px;border-radius:8px;display:grid;grid-template-columns:26px minmax(0,1fr);gap:8px;align-items:start}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt .k{font-family:var(--f-mono);font-size:13px;color:var(--muted);padding-top:1px}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.opt.right{border-color:var(--good);background:var(--good-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt:disabled{cursor:default}
+.fb{padding:10px 14px;border-radius:8px;font-size:15px}
+.fb.ok{background:var(--good-soft)} .fb.no{background:var(--bad-soft)}
+.scorebox{display:flex;gap:18px;align-items:center;flex-wrap:wrap;padding:18px;border-radius:var(--r);background:var(--surface);border:1px solid var(--line)}
+.scorebox .big{font-family:var(--f-display);font-size:40px;font-weight:800;line-height:1}
+
+/* Activities */
+.act{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;display:flex;flex-direction:column;gap:16px}
+.act-head{display:flex;flex-direction:column;gap:6px}
+.cardlist{display:flex;flex-direction:column;gap:10px}
+.ccard{border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:10px;background:var(--bg)}
+.ccard .row{justify-content:space-between}
+.chipbtn{border:1px solid var(--line);background:var(--surface);padding:6px 12px;border-radius:999px;font-size:14px}
+.chipbtn:hover:not(:disabled){border-color:var(--accent)}
+.chipbtn.right{background:var(--good-soft);border-color:var(--good)}
+.chipbtn.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.chipbtn[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent)}
+.pill{display:inline-block;font-size:12.5px;padding:2px 9px;border-radius:999px;background:var(--surface-2);font-weight:700}
+.pill.ok{background:var(--good-soft);color:var(--good)} .pill.no{background:var(--bad-soft);color:var(--bad)} .pill.acc{background:var(--accent-soft);color:var(--accent)} .pill.warm{background:var(--warm-soft);color:var(--warm)}
+.canvas-wrap{width:100%;position:relative}
+.canvas-wrap canvas{display:block;width:100%;border-radius:8px;background:var(--bg)}
+.ctrl{display:grid;grid-template-columns:minmax(0,1fr);gap:4px}
+.ctrl label{display:flex;justify-content:space-between;font-size:14px;gap:10px}
+.ctrl label b{font-family:var(--f-mono);font-weight:600}
+.stat{display:flex;flex-direction:column;gap:2px;padding:12px 14px;border-radius:8px;background:var(--bg);border:1px solid var(--line)}
+.stat .v{font-family:var(--f-display);font-size:26px;font-weight:800;font-variant-numeric:tabular-nums}
+.stat .l{font-size:13px;color:var(--muted)}
+.bars{display:flex;flex-direction:column;gap:6px}
+.bar{display:grid;grid-template-columns:minmax(90px,160px) minmax(0,1fr) 54px;gap:10px;align-items:center;font-size:14px}
+.bar .tr{height:14px;background:var(--surface-2);border-radius:4px;overflow:hidden}
+.bar .tr i{display:block;height:100%;background:var(--accent);transition:width .25s}
+.bar .tr i.w{background:var(--warm)}
+.bar .pct{font-family:var(--f-mono);font-size:12.5px;text-align:right}
+@media (prefers-reduced-motion: reduce){.bar .tr i{transition:none}}
+
+.pgrid{display:grid;grid-template-columns:repeat(9,1fr);gap:3px;width:100%;max-width:300px;aspect-ratio:1;touch-action:none;user-select:none}
+.pgrid div{background:var(--surface-2);border-radius:3px}
+.pgrid div.on{background:var(--ink)}
+.pix-layout{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:640px){.pix-layout{grid-template-columns:minmax(0,1fr)}}
+
+.gen-out{font-family:var(--f-display);font-size:21px;font-weight:700;line-height:1.3}
+.trace{display:flex;flex-wrap:wrap;gap:6px}
+.trace span{font-size:13px;padding:3px 8px;border-radius:6px;background:var(--surface-2)}
+.trace span sub{font-family:var(--f-mono);font-size:10px;color:var(--muted);margin-left:3px}
+
+.agent-log{display:flex;flex-direction:column;gap:10px}
+.astep{border:1px solid var(--line);border-radius:8px;padding:14px;background:var(--bg);display:flex;flex-direction:column;gap:8px}
+.astep .k{font-family:var(--f-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.astep .tool{font-family:var(--f-mono);font-size:13px;background:var(--surface-2);padding:2px 7px;border-radius:5px}
+pre.prompt{white-space:pre-wrap;font-family:var(--f-mono);font-size:13.5px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:14px;margin:0;max-height:320px;overflow:auto}
+
+/* Overview */
+.hero{display:flex;flex-direction:column;gap:18px;padding-block:6px 4px}
+.hero h1{max-width:16ch}
+.ladder{display:flex;flex-direction:column;gap:6px;max-width:860px}
+.rung{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:14px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);text-decoration:none;color:var(--ink)}
+.rung:hover{border-color:var(--accent)}
+.rung .n{font-family:var(--f-display);font-weight:800;font-size:24px;color:var(--accent);text-align:center}
+.rung .nm{font-weight:700;font-size:16.5px}
+.rung .gs{font-size:14.5px;color:var(--muted)}
+.rung .go{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.statrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;max-width:860px}
+
+/* Plan */
+.plan td,.plan th{padding:10px 12px}
+.plan tr.brk td{background:var(--surface-2);color:var(--muted);font-family:var(--f-mono);font-size:13px}
+.tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:5px;margin:2px 4px 2px 0;background:var(--surface-2)}
+.tag.Lecture{background:var(--accent-soft);color:var(--accent)}
+.tag.Activity,.tag.Simulation,.tag.Practice,.tag.Team.exercise{background:var(--warm-soft);color:var(--warm)}
+.tag.Assessment{background:var(--good-soft);color:var(--good)}
+.checklist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.checklist label{display:grid;grid-template-columns:24px minmax(0,1fr);gap:8px;align-items:start}
+
+/* Exam */
+.timer{position:sticky;top:calc(env(safe-area-inset-top,0px) + 62px);z-index:5;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:var(--r)}
+.timer .num{font-size:20px;font-weight:600}
+.exam-opts label{display:grid;grid-template-columns:24px minmax(0,1fr);gap:8px;align-items:start;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);cursor:pointer}
+.exam-opts label:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.exam-opts input{accent-color:var(--accent);margin-top:3px}
+.cert-img{max-width:100%;border-radius:6px;border:1px solid var(--line);display:block}
+.inline-confirm{background:var(--warm-soft);padding:14px;border-radius:8px;display:flex;flex-direction:column;gap:10px}
+.pager{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:18px}
+.pager a{text-decoration:none;display:flex;flex-direction:column;gap:2px;max-width:48%}
+.pager a b{color:var(--ink)}
+.pager a.next{text-align:right;margin-left:auto}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-weight:700;font-size:14.5px}
+.field small{color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+
+<header class="topbar"><div class="topbar-in">
+  <div class="brand"><b>From Rules to Agents</b><span>AI foundations · 8-hour course</span></div>
+  <div class="prog" title="Module checks completed"><span id="progTxt">0 of 8 checks</span><div class="prog-bar"><i id="progBar" style="width:0%"></i></div></div>
+  <div class="seg" role="group" aria-label="View mode">
+    <button type="button" id="modeT" aria-pressed="true">Trainee</button>
+    <button type="button" id="modeI" aria-pressed="false">Instructor</button>
+  </div>
+</div></header>
+<div class="shell">
+  <nav class="rail" id="rail" aria-label="Course"></nav>
+  <main id="main" tabindex="-1">
+    <div class="mobile-nav"><label class="eyebrow" for="mnav">Go to</label><select id="mnav"></select></div>
+    <div id="view"></div>
+  </main>
+</div>
+<script>
+const LADDER = [
+  {n:1, name:'Rule-based software', gist:'People write every rule; the machine follows them exactly.', ex:'Payroll, tax calculators, return-policy checks', mod:'m1'},
+  {n:2, name:'Machine learning', gist:'Finds statistical patterns in tables of past examples.', ex:'Spam filters, demand forecasts, fraud flags', mod:'m2'},
+  {n:3, name:'Deep learning', gist:'Layered neural networks find patterns in images, sound and text.', ex:'Face unlock, speech-to-text, shelf cameras', mod:'m3'},
+  {n:4, name:'Generative AI', gist:'Produces new content instead of only sorting it.', ex:'Drafted emails, generated images, summaries', mod:'m4'},
+  {n:5, name:'Foundation models', gist:'One huge general model, trained once and reused everywhere.', ex:'A single model behind HR Q&A, translation and drafting', mod:'m5'},
+  {n:6, name:'Large language models', gist:'Foundation models specialised in text.', ex:'Chat assistants, writing aids, coding help', mod:'m6'},
+  {n:7, name:'Multimodal models', gist:'Text, images, audio and video in one model.', ex:'Photo of a shelf in, list of gaps out', mod:'m7'},
+  {n:8, name:'AI agents', gist:'Systems that plan and take actions, not just respond.', ex:'Finding cover for a sick colleague’s shift', mod:'m8'}
+];
+
+const BREAKS = {m1:{start:'10:20',end:'10:35',label:'Morning break',mins:15}, m3:{start:'12:10',end:'12:55',label:'Lunch',mins:45}, m6:{start:'15:05',end:'15:20',label:'Afternoon break',mins:15}};
+
+const PRETEST = [
+  {q:'Which best describes traditional software?', o:['It learns from examples','It follows rules a person wrote','It creates new content','It decides its own goals'], a:1, why:'Traditional software does exactly what its hand-written instructions say.'},
+  {q:'An email spam filter that gets better as more emails are marked as spam is an example of…', o:['Rule-based software','Machine learning','A multimodal model','Robotics'], a:1, why:'It improves by learning patterns from labelled examples, which is machine learning.'},
+  {q:'What does generative AI do?', o:['Stores data safely','Sorts items into fixed categories only','Produces new content such as text or images','Speeds up the internet'], a:2, why:'Generative models create new content that resembles what they learned from.'},
+  {q:'LLM stands for…', o:['Large Language Model','Linked Logic Machine','Learning Loop Method','Low-Latency Module'], a:0, why:'Large language models are foundation models specialised in text.'},
+  {q:'A model that can look at a photo and answer a spoken question about it is…', o:['Rule-based','Multimodal','A spreadsheet macro','A search engine'], a:1, why:'It handles more than one type of data (image and audio), so it is multimodal.'},
+  {q:'What is the main difference between a chatbot and an AI agent?', o:['Agents are always robots','An agent takes actions with tools toward a goal','Chatbots cannot use language','There is no difference'], a:1, why:'A chatbot responds; an agent plans and acts, for example by updating a schedule.'},
+  {q:'If you ask an AI assistant the same question twice, you…', o:['Always get the identical answer','May get different answers','Get an error message','Get the answer only once'], a:1, why:'Modern AI is probabilistic. Wording can vary between runs.'},
+  {q:'A foundation model is…', o:['The first model a company ever built','A large general-purpose model trained once and adapted to many tasks','A model that only does maths','A database of rules'], a:1, why:'Foundation models are trained once at great cost and then reused for many jobs.'}
+];
+
+const MODULES = [
+/* ---------------- M0 ---------------- */
+{id:'m0', code:'M0', title:'Welcome and Baseline', rung:0, start:'09:00', end:'09:30', mins:30, methods:['Discussion','Assessment'],
+objectives:['Explain what the day covers and how you will be certified','Record a baseline of what you already know','Spot at least three places you already use AI'],
+notes:`
+<p class="lede">Today you will trace how software went from following hand-written rules to systems that learn, create and act. You do not need maths or programming. You need curiosity and examples from your own work.</p>
+<h3>The one idea to carry all day</h3>
+<p>For fifty years, software worked by <strong>explicit specification</strong>: a person wrote the rules and the machine executed them exactly. Modern AI turns this around. A person supplies <strong>examples, objectives or context</strong>, and a statistical model produces an answer, prediction or action, even for cases nobody wrote a rule for.</p>
+<blockquote>Capability now comes from data and context, not from hand-written logic.</blockquote>
+<p>Every module today is a step on the same ladder. Each step keeps what came before and adds one new ability.</p>
+<h3>How each module works</h3>
+<ul>
+<li><strong>Trainee notes</strong>: the ideas in plain language, with an everyday example.</li>
+<li><strong>Try it</strong>: a hands-on activity you can play with. Break it on purpose; that is how you learn its limits.</li>
+<li><strong>Check</strong>: four or five questions with instant feedback. These do not count toward your grade, but you must attempt every one to be certified.</li>
+</ul>
+<h3>How you will be certified</h3>
+<p>At the end of the day you will sit a 25-question final assessment (pass mark 70%) and your team will complete an AI Opportunity Canvas that your instructor scores. The Certification page has the full rules.</p>`,
+example:{title:'AI you used before breakfast', html:`<p>Your phone unlocked when it recognised your face (deep learning). Your inbox had already moved a scam email to spam (machine learning). Your keyboard guessed the next word you would type (a language model). Your map app estimated when you would arrive based on today’s traffic (machine learning). None of these were written as rules by a programmer for your face, your inbox or your commute.</p>`},
+terms:[['Artificial intelligence (AI)','An umbrella term for computer systems that do tasks which normally need human judgment, such as recognising, predicting, writing or deciding.'],['Model','The learned pattern-engine produced by training. It is the “brain” that turns an input into an output.'],['Training','Showing a system many examples so it adjusts itself to get better at a task.'],['Output','What the model produces: a prediction, a label, a piece of text, an image or an action.']],
+takeaways:['Software used to follow rules. AI learns patterns from examples.','You already use AI many times a day, often without noticing.','Today follows one ladder of eight rungs, from rules to agents.'],
+inst:{purpose:'Lower anxiety, set expectations, and capture a baseline you will compare against at the end of the day.',
+flow:[['0–5','Welcome, logistics (breaks, phones, Wi-Fi), open the module on every device. Explain Trainee and Instructor modes.'],['5–13','Icebreaker: “AI I met this week”. Trainees tick items in Try it, then share one surprise with a neighbour. Write answers on sticky notes and put them on a wall; you will sort them onto the ladder in M9.'],['13–23','Pre-test (Check tab). Anonymous and ungraded. Ask for a show of hands on the results to gauge the room.'],['23–30','Walk through the agenda on the Session plan page. State the one idea, read it aloud, and write it on a flip chart that stays up all day.']],
+say:['“By five o’clock you will be able to explain to a colleague why AI behaves differently from normal software, and when to use it.”','“No question is too basic today. If you are wondering, three other people are too.”','“The pre-test is a snapshot, not a grade. I want to see how far we travel.”'],
+ask:['Where did AI help you this week? Where did it annoy you?','What is one thing you have heard about AI that you are not sure is true?'],
+watch:['“AI means robots.” Most AI is invisible software. Robots are one use.','“AI understands like a person.” It finds patterns; understanding is a debated word. Park this for M6.','“AI is only for technical people.” The biggest decisions about AI are business decisions: what problem, what data, what risk.'],
+tips:['Keep the sticky-note wall; it is your closing activity.','Note two or three trainees who seem anxious and pair them with confident partners in M1.','If pre-test scores are high, speed up M1–M2 and spend the spare time on M6 and M8.'],
+materials:['Projector with this module open','Sticky notes and markers','Flip chart for the “one idea”','Printed ladder poster (optional)','One device per trainee or pair']},
+acts:['encounters'], quiz:PRETEST, quizLabel:'Pre-test (not graded)'},
+
+/* ---------------- M1 ---------------- */
+{id:'m1', code:'M1', title:'The Big Shift: From Rules to Learning', rung:1, start:'09:30', end:'10:20', mins:50, methods:['Lecture','Activity','Discussion'],
+objectives:['Describe how rule-based software works and where it is the right tool','Explain why some tasks cannot be captured in rules','Explain the three business consequences of learning from data'],
+notes:`
+<h3>The old way: explicit specification</h3>
+<p>In traditional software a programmer writes every rule. A payroll system says: <em>pay = hours × rate; hours over 40 are paid at 1.5 ×</em>. Give it the same input and it gives the same output, every time. This is called <strong>deterministic</strong> behaviour.</p>
+<p>Rules are excellent when the logic is <strong>known, stable, complete and must be exact</strong>: tax, pricing, unit conversion, access control, return policies. Most of the world’s software still works this way, and should.</p>
+<h3>Where rules break</h3>
+<p>Try writing the rules for “is this customer review happy?” You might start with “contains <em>great</em> → happy”. Then a customer writes “Oh great, another 40-minute queue.” You add a rule for sarcasm. Then “not bad at all” gets flagged as negative because it contains <em>bad</em>. Every fix breaks something else.</p>
+<p>Recognising a face, hearing a word, judging whether a mango is ripe: you can do these easily but you cannot write down how. The philosopher Michael Polanyi called this “we know more than we can tell”.</p>
+<h3>The new way: learning from examples</h3>
+<p>Instead of rules, we give the computer <strong>examples</strong> (thousands of reviews already marked happy or unhappy), an <strong>objective</strong> (get as many right as possible) and sometimes <strong>context</strong> (instructions, documents). A statistical model finds the patterns itself, then applies them to reviews it has never seen.</p>
+<p>Think of how a child learns the word “dog”. Nobody gives them a definition with four legs, fur and a tail. They see many dogs, are corrected when they call a cat a dog, and soon recognise breeds they have never met.</p>
+<div class="flip">
+  <div class="flip-row"><span class="flip-tag">Traditional</span><span class="box">Rules</span><span class="op">+</span><span class="box">Data</span><span class="op">→</span><span class="box strong">Answers</span></div>
+  <div class="flip-row"><span class="flip-tag">Learning</span><span class="box">Examples</span><span class="op">+</span><span class="box">Objectives &amp; context</span><span class="op">→</span><span class="box strong">Model</span><span class="op">→</span><span class="box">Answers for new cases</span></div>
+</div>
+<h3>Three business consequences</h3>
+<ol>
+<li><strong>Faster to build.</strong> Behaviour comes from data and instructions rather than hand-coding every case, so a working prototype can take days instead of months.</li>
+<li><strong>Probabilistic, not deterministic.</strong> The system gives the most likely answer. It can be right 95% of the time and still be wrong on the next case. You design for review, measure accuracy, and decide what happens when it is wrong.</li>
+<li><strong>The model and the company are separate assets.</strong> A few companies build very large models; thousands of companies build products on top of them. Think engine and car. A company’s edge comes from its data, its workflows and its customers, not from owning the engine.</li>
+</ol>
+<h3>Rules and learning live together</h3>
+<p>Real systems combine both. A store scheduling system uses rules for labour law and break times, and learning to forecast how busy Saturday will be.</p>`,
+example:{title:'Two ways to build a spam filter', html:`<p><strong>Rules:</strong> “If the subject contains FREE MONEY, move to spam.” Within a week spammers write “FR3E M0NEY” and the rule is useless. Someone must keep writing new rules forever.</p><p><strong>Learning:</strong> show the system millions of emails that people have already marked spam or not spam. It learns hundreds of subtle signals, such as the sender’s history, odd links and phrasing, and it keeps learning as people mark new emails. Nobody writes a rule for FR3E M0NEY.</p>`},
+terms:[['Rule-based system','Software whose behaviour is entirely defined by instructions a person wrote.'],['Deterministic','Same input always gives the same output.'],['Probabilistic','Output is the most likely answer based on learned patterns. It is usually right, sometimes wrong, and can vary.'],['Statistical model','A mathematical pattern-finder whose settings are adjusted by data rather than written by hand.'],['Training data','The examples a model learns from.']],
+takeaways:['Use rules when logic is known, stable and must be exact.','Use learning when you can show examples but cannot write the rules.','AI is faster to build, probabilistic in behaviour, and separable from the business that uses it.'],
+inst:{purpose:'Land the single conceptual shift of the day. Everything later is a variation on it.',
+flow:[['0–7','Hook: give pairs three minutes to write rules on paper for “Is this a photo of a cat?” Collect a few. Show a photo of a hairless cat and a cat-shaped cushion.'],['7–18','Teach old vs new using the flip diagram. Use the payroll and spam examples.'],['18–28','Try it: Rule-breaker. Trainees edit word lists to beat the reviews. Ask who got 9 out of 9 and what they had to do.'],['28–36','Try it: Rules or learning? in pairs. Debrief the two most disputed cards.'],['36–45','The three business consequences. Spend most time on “probabilistic”. Ask for a job in the room where 95% right is fine and one where it is not.'],['45–50','Check (5 questions).']],
+say:['“If you can write the rule down, write the rule. AI is for when you can’t.”','“Probabilistic doesn’t mean random. A weather forecast is probabilistic and still useful.”','“The engine maker and the car maker are different businesses. Most of us are car makers.”'],
+ask:['What task in your job would be impossible to write rules for?','Where would a 5% error rate be acceptable in your work? Where would it be a disaster?'],
+watch:['“AI will replace all traditional software.” Most systems combine both.','“Probabilistic means unreliable.” It means measured in likelihoods; it can be highly accurate.','“Someone programs the AI’s answers.” Nobody writes the answer to a specific question; behaviour emerges from training.'],
+tips:['The cat-rules exercise works best if you let it run a little long; frustration is the lesson.','For non-technical groups, avoid the word “algorithm” until someone else uses it.','Keep the flip diagram visible; you will point back to it in every module.'],
+materials:['Paper and pens for the cat-rules exercise','Two or three odd cat photos','Flip diagram on screen']},
+acts:['rulebreaker','sorter'],
+quiz:[
+ {q:'In rule-based software, where does the behaviour come from?', o:['Patterns learned from data','Hand-written instructions','The user’s mood','Random chance'], a:1, why:'A person specifies every rule in advance.'},
+ {q:'Why is detecting a “happy” customer review hard with rules?', o:['Computers cannot read text','Language has too many variations, like sarcasm and negation, to list','Reviews are too short','Rules are illegal for text'], a:1, why:'“Oh great, another queue” and “not bad at all” defeat simple word rules.'},
+ {q:'What does “probabilistic” behaviour mean?', o:['The system is random and useless','The output is the most likely answer from learned patterns and can vary','The system never makes mistakes','The system needs the internet'], a:1, why:'It usually gets it right, may vary, and must be measured and checked.'},
+ {q:'Calculating overtime pay is best built with…', o:['Rules, because the logic is known, stable and must be exact','Machine learning','A generative model','An AI agent'], a:0, why:'Exact, stable, legally defined logic is a job for rules.'},
+ {q:'“The model and the company using it are separate assets” means…', o:['Companies must build their own models','A company can build a valuable product on a model it did not create; its edge is data, workflow and customers','Models are worthless','Only model makers make money'], a:1, why:'Like engine and car makers, they are different businesses with different advantages.'}
+]},
+
+/* ---------------- M2 ---------------- */
+{id:'m2', code:'M2', title:'Machine Learning: Finding Patterns in Tables', rung:2, start:'10:35', end:'11:25', mins:50, methods:['Lecture','Demo','Activity'],
+objectives:['Describe machine learning as pattern-finding on structured data','Use the words feature, label, training and testing correctly','Tell supervised, unsupervised and reinforcement learning apart','Name four ways a model goes wrong'],
+notes:`
+<h3>What machine learning is</h3>
+<p>Machine learning (ML) is <strong>statistical pattern-finding on structured data</strong>: data that fits in rows and columns, like a spreadsheet. Each row is one example (one day, one customer, one loan). The columns are <strong>features</strong>, the inputs, such as temperature or day of the week. One column is the <strong>label</strong>, the thing we want to predict, such as how many customers came in.</p>
+<h3>How a model learns, in four steps</h3>
+<ol>
+<li><strong>Collect examples.</strong> Two years of daily store data.</li>
+<li><strong>Choose what to predict.</strong> Tomorrow’s footfall.</li>
+<li><strong>Let the algorithm adjust itself</strong> to reduce its error. It guesses, checks how wrong it was, nudges its settings, and repeats thousands of times.</li>
+<li><strong>Test it on examples it has never seen.</strong> If it only does well on the data it trained on, it has memorised, not learned.</li>
+</ol>
+<p>A new store manager does the same thing. After a few months they know Saturdays are busy, rainy days are quiet, and a promotion brings a rush. Nobody gave them a formula; they saw enough days.</p>
+<h3>Three flavours</h3>
+<ul>
+<li><strong>Supervised learning</strong>: examples come with the right answers. Past loans marked “repaid” or “defaulted”. Most business ML is this.</li>
+<li><strong>Unsupervised learning</strong>: no answers given. The model groups similar things, for example discovering five types of shopper from purchase history.</li>
+<li><strong>Reinforcement learning</strong>: learning by trial, error and reward, like training a dog with treats. Used for game-playing, robot movement and some pricing systems.</li>
+</ul>
+<h3>What can go wrong</h3>
+<ul>
+<li><strong>Garbage in, garbage out.</strong> Missing or wrong data gives confident wrong answers.</li>
+<li><strong>Bias from history.</strong> A hiring model trained on ten years of past decisions will copy past prejudice.</li>
+<li><strong>Overfitting.</strong> Like a student who memorises last year’s exam answers and fails a new exam.</li>
+<li><strong>Drift.</strong> The world changes. Many demand forecasts broke overnight in March 2020 because the past no longer described the present.</li>
+</ul>`,
+example:{title:'Forecasting store footfall', html:`<div class="tbl-wrap"><table class="mini"><thead><tr><th>Date</th><th>Day</th><th>Weather</th><th>Promotion</th><th>Holiday</th><th>Visitors (label)</th></tr></thead><tbody><tr><td>5 Sep</td><td>Sat</td><td>Sunny</td><td>Yes</td><td>No</td><td class="num">2,140</td></tr><tr><td>6 Sep</td><td>Sun</td><td>Rain</td><td>No</td><td>No</td><td class="num">1,210</td></tr><tr><td>7 Sep</td><td>Mon</td><td>Sunny</td><td>No</td><td>No</td><td class="num">980</td></tr></tbody></table></div><p>From two years of rows like these, a model learns that Saturdays add about 40%, rain removes about 15%, and a promotion adds about 20%. The store uses the forecast to decide how many associates to schedule. The first five columns are features; the last is the label.</p>`},
+terms:[['Structured data','Data that fits neatly in rows and columns.'],['Feature','An input column the model uses, such as temperature.'],['Label','The column you want to predict, such as visitors.'],['Training set / test set','Examples used to learn, and separate examples held back to check the model on unseen cases.'],['Overfitting','Memorising the training examples instead of learning general patterns.'],['Drift','When the real world changes so the model’s past patterns no longer fit.']],
+takeaways:['ML finds patterns in tables of past examples.','It learns by repeatedly reducing its own error.','Always test on data the model has not seen, and watch for bias and drift.'],
+inst:{purpose:'Make “learning” concrete: a machine adjusting itself to reduce error on real-looking data.',
+flow:[['0–5','Bridge from M1: “We said models learn from examples. What does that look like?” Show the footfall table.'],['5–17','Teach features, labels, and the four learning steps. Use the new store manager analogy.'],['17–30','Try it: Fit the line. Trainees fit by hand first, note their error, then press “Let the machine learn”. Ask what the machine did that they did.'],['30–40','Three flavours. Act out reinforcement learning with a volunteer and a “hot/cold” game.'],['40–45','What goes wrong. Ask for a real example of bias or drift from their industry.'],['45–50','Check (5 questions).']],
+say:['“Learning is just: guess, measure how wrong, adjust, repeat.”','“A model is only as good as the history you feed it, including the bad parts.”','“If it’s perfect on the training data, be suspicious, not happy.”'],
+ask:['What data does your team already collect that could predict something useful?','What happened to your forecasts during an unusual event such as a festival, a strike or a pandemic?'],
+watch:['“The model understands why people shop.” It finds correlations, not causes.','“More data always fixes it.” More biased data makes bias stronger.','“ML is only for big tech.” Spreadsheet forecasting tools already use it.'],
+tips:['In Fit the line, the “aha” is watching the average miss drop. Point at the number, not the line.','Hot/cold game: blindfold optional; keep it light and under three minutes.','If time is short, skip the reinforcement demo and give the dog-treat analogy.'],
+materials:['Footfall table on screen','Volunteer for hot/cold game']},
+acts:['fitline'],
+quiz:[
+ {q:'Machine learning is best described as statistical pattern-finding on…', o:['Structured data such as tables','Only photographs','Handwritten rules','Random numbers'], a:0, why:'Classic ML works on rows and columns of past examples.'},
+ {q:'In a sales table, the “units sold” column you want to predict is the…', o:['Feature','Label','Rule','Prompt'], a:1, why:'The label is the target. The other columns are features.'},
+ {q:'Grouping customers into segments without any predefined answers is…', o:['Supervised learning','Unsupervised learning','Reinforcement learning','Rule-based software'], a:1, why:'No answers are provided; the model finds the groups itself.'},
+ {q:'A model scores 99% on its training data but poorly on new data. This is…', o:['Drift','Overfitting','Hallucination','Deep learning'], a:1, why:'It memorised the training examples instead of learning general patterns.'},
+ {q:'A forecast trained before a major disruption performs badly after it. This is…', o:['Drift','Overfitting','Tokenisation','Fine-tuning'], a:0, why:'The world changed, so past patterns stopped fitting.'}
+]},
+
+/* ---------------- M3 ---------------- */
+{id:'m3', code:'M3', title:'Deep Learning: Seeing, Hearing and Reading', rung:3, start:'11:25', end:'12:10', mins:45, methods:['Lecture','Activity'],
+objectives:['Explain why images, audio and text are hard for classic ML','Describe a neural network as layers that build simple features into complex ones','Name the three ingredients behind deep learning’s rise','State two trade-offs of deep learning'],
+notes:`
+<h3>Why unstructured data is hard</h3>
+<p>A table has a column called “temperature”. A photo has no column called “cat”. A 12-megapixel phone photo is 36 million numbers (red, green and blue for every pixel). A one-second voice clip is tens of thousands of air-pressure readings. The meaning is spread across all of them.</p>
+<h3>Neural networks in plain words</h3>
+<p>A neural network is built from many simple units, loosely inspired by brain cells. Each unit takes in numbers, weighs how important each one is, and passes a signal on. Units are arranged in <strong>layers</strong>. Stack many layers and you have a <strong>deep</strong> network.</p>
+<p>The magic is that the layers learn their own jobs:</p>
+<ul>
+<li>Early layers learn to spot <strong>edges and colours</strong>.</li>
+<li>Middle layers combine those into <strong>shapes and parts</strong>: an eye, a wheel, a corner of a label.</li>
+<li>Late layers combine parts into <strong>whole things</strong>: a face, a car, a packet of biscuits.</li>
+</ul>
+<p>Nobody tells the network which features to look for. It discovers them from examples, which is why this is called <em>representation learning</em>.</p>
+<p><strong>Analogy:</strong> a relay of inspectors in a mango-packing plant. The first only checks colour patches. The second looks at the first one’s notes and checks shape. The third combines both and says “ripe” or “not yet”. No single inspector knows everything; the chain does.</p>
+<h3>Why it took off around 2012</h3>
+<ol>
+<li><strong>Big data</strong>: billions of labelled photos, recordings and pages on the internet.</li>
+<li><strong>Cheap parallel computing</strong>: GPUs, chips built for video games, turned out to be ideal for the millions of small calculations networks need.</li>
+<li><strong>Better techniques</strong>: researchers found ways to train very deep networks reliably.</li>
+</ol>
+<p>In 2012 a deep network called AlexNet beat every other approach in a famous image-recognition contest by a wide margin, and the field shifted almost overnight.</p>
+<h3>Trade-offs</h3>
+<ul>
+<li>Needs large amounts of data and computing power.</li>
+<li>Hard to explain <em>why</em> it made a decision (the “black box” problem).</li>
+<li>Can be fooled by small changes a person would ignore, such as a few stickers on a stop sign.</li>
+</ul>`,
+example:{title:'The shelf-scanning camera', html:`<p>A camera photographs each aisle every hour. A deep learning model recognises each product, compares the photo with the planned layout, and spots gaps and misplaced items. An associate gets a task on their handheld: “Aisle 7, bay 3: restock 500 g basmati rice.” Twenty years ago this would have needed a person walking every aisle with a clipboard.</p>`},
+terms:[['Unstructured data','Images, audio, video and free text, where meaning is spread across raw values.'],['Neural network','A model made of layers of simple connected units that pass weighted signals.'],['Layer','One stage in the network. Early layers detect simple features; later layers detect complex ones.'],['Weights','The adjustable numbers inside a network that training tunes.'],['GPU','A chip that does many simple calculations in parallel; the workhorse of deep learning.'],['Explainability','How well we can say why a model produced a result.']],
+takeaways:['Deep learning handles images, sound and text, which classic ML struggled with.','Layers build simple features into complex ones, and learn which features matter by themselves.','It needs lots of data and compute, and it is hard to explain.'],
+inst:{purpose:'Give a mental picture of layers without any maths, and connect it to everyday tech.',
+flow:[['0–5','Bridge: “How many numbers are in a phone photo?” Take guesses, reveal 36 million.'],['5–17','Teach layers with the mango-inspector relay. Optionally act it out with three volunteers passing notes.'],['17–30','Try it: Pixel detective. Draw shapes, watch layer 1 and layer 2 respond. Challenge: fool it.'],['30–38','Why 2012; trade-offs. Mention face unlock and voice assistants as deep learning.'],['38–45','Check (5 questions).']],
+say:['“Each layer is a simple inspector. Depth is what makes it clever.”','“Nobody told it to look for eyes. It found that eyes help.”','“When it’s wrong, it’s often hard to say why. That matters in HR, lending and health.”'],
+ask:['Which of your apps might use deep learning?','Where would you need to explain an AI decision to a customer or regulator?'],
+watch:['“Neural networks work like the human brain.” The inspiration is loose; they are maths.','“Deep means profound.” It only means many layers.','“It sees like we do.” It can be fooled by patterns humans ignore.'],
+tips:['Pixel detective is deliberately tiny. Say so: real networks have millions of units.','The “fool it” challenge produces good discussion about robustness.','Watch the clock; lunch follows, and people disengage fast after 12:00.'],
+materials:['Three volunteers and paper for the relay (optional)']},
+acts:['pixels'],
+quiz:[
+ {q:'Deep learning made its biggest progress on…', o:['Unstructured data such as images, audio and text','Only spreadsheets','Hand-written rules','Printing'], a:0, why:'Layers of learned features made images, sound and language workable.'},
+ {q:'The word “deep” in deep learning refers to…', o:['How profound the ideas are','Many stacked layers','Deep-sea data','Very long training sessions only'], a:1, why:'A deep network simply has many layers.'},
+ {q:'In an image model, the early layers typically detect…', o:['Whole objects like faces','Simple features like edges and colours','The photographer’s name','Prices'], a:1, why:'Simple features first; complex combinations later.'},
+ {q:'Which combination fuelled deep learning around 2012?', o:['Large datasets, GPUs and better training techniques','Faster typewriters','Smaller datasets','Rule engines'], a:0, why:'Data, parallel compute and technique came together.'},
+ {q:'A common drawback of deep learning is…', o:['It cannot handle images','It is hard to explain why it made a decision','It needs no data','It is always slower than a person'], a:1, why:'The black-box problem matters wherever decisions must be justified.'}
+]},
+
+/* ---------------- M4 ---------------- */
+{id:'m4', code:'M4', title:'Generative AI: From Recognising to Creating', rung:4, start:'12:55', end:'13:40', mins:45, methods:['Activity','Lecture','Discussion'],
+objectives:['Tell classifying models from generative models','Explain in plain words how a generative model creates something new','List three good uses and four risks','Apply the rule “AI drafts, people decide”'],
+notes:`
+<h3>Classify versus create</h3>
+<p>The models so far answer <em>which bucket?</em> Is this email spam? Is this a cat? How many visitors tomorrow? A <strong>generative</strong> model answers <em>make me one</em>. Write an email. Draw a cat. Compose a jingle. It produces new content that resembles what it learned from, but is not a copy.</p>
+<h3>How it creates</h3>
+<p>A generative model learns the patterns of its training data so well that it can produce new, plausible examples, one piece at a time.</p>
+<ul>
+<li><strong>Text</strong> is produced word by word: at each step, the model picks a likely next word given everything so far (you will see this in detail in M6).</li>
+<li><strong>Images</strong> are often made by <em>diffusion</em>: start from random static, then remove noise step by step, guided by your description, until a picture appears. Like a photograph slowly developing in a darkroom.</li>
+</ul>
+<p>Because it samples from likelihoods, the same request can give different results. That is a feature for brainstorming and a risk for facts.</p>
+<h3>Where it is useful</h3>
+<ul>
+<li>First drafts: emails, job adverts, product descriptions, training material.</li>
+<li>Summaries of long documents, meetings and customer feedback.</li>
+<li>Variations: ten headline options, five image concepts.</li>
+<li>Translation and rewriting for different audiences.</li>
+</ul>
+<h3>Where it goes wrong</h3>
+<ul>
+<li><strong>Hallucination</strong>: confident, fluent, false content, such as a policy clause that does not exist.</li>
+<li><strong>Intellectual property</strong>: questions about what it was trained on and who owns the output.</li>
+<li><strong>Bias and stereotypes</strong> copied from training data (“show a CEO”).</li>
+<li><strong>Deepfakes and fraud</strong>: fake voices and videos of real people.</li>
+</ul>
+<blockquote>AI drafts; people decide.</blockquote>`,
+example:{title:'Writing 500 product descriptions', html:`<p><strong>Before:</strong> a copywriter spends about 10 minutes per description. 500 × 10 minutes ≈ 83 hours.</p><p><strong>After:</strong> a generative model drafts each description from the product’s attributes (size, material, origin). A copywriter reviews and edits each one in about 2 minutes. 500 × 2 minutes ≈ 17 hours, plus a few hours setting up the prompt and checking samples.</p><p>The saving is real, but it comes from <em>faster review</em>, not from removing the reviewer. One unchecked description claiming “organic” when the product is not can become a legal problem.</p>`},
+terms:[['Generative model','A model that produces new content such as text, images, audio or code.'],['Discriminative model','A model that sorts or scores existing inputs, for example spam or not spam.'],['Hallucination','Confident, fluent output that is false or made up.'],['Diffusion model','An image generator that turns random noise into a picture step by step.'],['Deepfake','Generated audio or video that imitates a real person.']],
+takeaways:['Generative AI creates rather than classifies.','It builds output piece by piece from learned likelihoods, so results vary.','Great for drafts and variations; always review facts, claims and tone.'],
+inst:{purpose:'Post-lunch energy slot. Keep it hands-on and make the risks memorable.',
+flow:[['0–5','Energiser: human generator. Start a sentence; each trainee adds one word. Point out it made sense locally but wandered overall.'],['5–15','Classify vs create; diffusion as a developing photograph.'],['15–27','Try it: Mini generator. Trainees generate announcements, then add their own sentences and retrain.'],['27–37','Uses and risks; walk through the 500 descriptions maths. Ask where a hallucination would hurt most.'],['37–45','Check (5 questions).']],
+say:['“It’s the world’s fastest first-draft writer, and it has never checked a fact in its life.”','“Different answer every time is great for brainstorming and bad for policy.”','“AI drafts; people decide. Write that down.”'],
+ask:['Which weekly writing task in your job would you hand to a first-draft writer?','What is the worst thing a confident wrong answer could do in your area?'],
+watch:['“It searches the internet and copies.” It generates from learned patterns; that is why it can invent things.','“If it sounds confident, it is correct.” Fluency and accuracy are unrelated.','“Generated content is automatically free to use.” Check your organisation’s policy.'],
+tips:['The human-generator energiser is the best bridge into M6; refer back to it there.','In the Mini generator, point out sentences that were never in the training text.','Avoid live deepfake demos of real people.'],
+materials:['Nothing extra; optional live access to an approved generative tool']},
+acts:['generator'],
+quiz:[
+ {q:'What is the key difference between a classifier and a generative model?', o:['A classifier sorts inputs into categories; a generative model produces new content','A classifier is always more accurate','Generative models only work on numbers','There is no difference'], a:0, why:'Which bucket? versus make me one.'},
+ {q:'A hallucination is…', o:['A model crash','Confident, fluent content that is false','A very creative image','A slow response'], a:1, why:'Fluent does not mean true.'},
+ {q:'The best practice for using generative AI on customer-facing text is…', o:['Publish directly to save time','AI drafts, and a person reviews before it goes out','Never use it','Only use it for internal jokes'], a:1, why:'The saving comes from faster review, not from skipping review.'},
+ {q:'Diffusion image generators start from…', o:['A blank white page','Random noise that is refined step by step','A photo of the user','A spreadsheet'], a:1, why:'They remove noise gradually, guided by the description.'},
+ {q:'Which task is least suited to generative AI on its own?', o:['Drafting a job advert','Brainstorming campaign names','Calculating exact payroll tax','Summarising meeting notes'], a:2, why:'Exact, legally defined calculations belong to rules.'}
+]},
+
+/* ---------------- M5 ---------------- */
+{id:'m5', code:'M5', title:'Foundation Models: Train Once, Reuse Everywhere', rung:5, start:'13:40', end:'14:15', mins:35, methods:['Lecture','Activity','Discussion'],
+objectives:['Define a foundation model and why it changed AI economics','Choose between prompting, retrieval and fine-tuning','Explain why the model and the company using it are separate assets'],
+notes:`
+<h3>The big idea</h3>
+<p>Before foundation models, every task needed its own model: one for spam, one for forecasting, one for translation, each with its own data and team. A <strong>foundation model</strong> flips this. You train <strong>one very large, general-purpose model</strong> on a broad slice of the world’s text, images and code, then <strong>adapt</strong> it to hundreds of tasks.</p>
+<p><strong>Analogy:</strong> a power grid. Building the power station is enormously expensive and only a few organisations do it. After that, millions of appliances plug in and each does something different.</p>
+<p>Another way to see it: a graduate with a broad education can be briefed for many jobs in days. You do not need to raise a new person from birth for each role.</p>
+<h3>The economics</h3>
+<p>Training a frontier model costs hundreds of millions of dollars in computing, data and talent. Only a handful of companies do it. Everyone else <strong>rents access</strong> through an API (a way for software to call the model over the internet) or runs an <strong>open-weight</strong> model, one whose internal settings are published so you can host it yourself.</p>
+<h3>Three ways to adapt a foundation model</h3>
+<div class="tbl-wrap"><table class="mini"><thead><tr><th>Method</th><th>What it is</th><th>Like…</th><th>Use when</th></tr></thead><tbody>
+<tr><td><strong>Prompting</strong></td><td>Instructions and examples in the request</td><td>Briefing a capable temp worker</td><td>Always try first. Tone, format, simple tasks.</td></tr>
+<tr><td><strong>Retrieval (RAG)</strong></td><td>The system looks up your documents and hands the relevant passages to the model</td><td>An open-book exam</td><td>Answers must come from your own, changing information.</td></tr>
+<tr><td><strong>Fine-tuning</strong></td><td>Extra training on many of your examples</td><td>A specialist course</td><td>You need a very consistent style or niche skill, and have thousands of examples.</td></tr></tbody></table></div>
+<p>Choose the lightest method that works. Most business uses need prompting plus retrieval.</p>
+<h3>The model and the company are separate assets</h3>
+<p>The model is the engine. The product built around it, including the data, the workflow, the trust and the customer relationships, is the car. Two companies using the same model can build very different businesses.</p>
+<ul>
+<li><strong>Durable advantages</strong>: your own data, deep integration into daily work, trusted brand, distribution.</li>
+<li><strong>Risks</strong>: dependence on a vendor, price changes, a model update that changes behaviour, data leaving your control.</li>
+</ul>`,
+example:{title:'One model, many jobs in a retail company', html:`<p>A single foundation model, adapted differently each time, can answer HR policy questions (retrieval over the handbook), draft supplier emails (prompting with a house style), summarise thousands of customer reviews (prompting), translate store notices into five languages (prompting), and explain why a forecast changed (retrieval over forecast data). Five products, one engine.</p>`},
+terms:[['Foundation model','A very large general-purpose model trained once on broad data and adapted to many tasks.'],['API','A way for one piece of software to call another over the internet, for example to send a question to a model.'],['Open-weight model','A model whose internal settings are published so you can run it yourself.'],['Prompting','Steering a model with instructions and examples in the request.'],['Retrieval-augmented generation (RAG)','Looking up relevant documents and giving them to the model so it answers from them.'],['Fine-tuning','Additional training on your own examples to specialise a model.']],
+takeaways:['One expensive model, trained once, now powers thousands of products.','Adapt with prompting first, then retrieval, then fine-tuning if really needed.','Your advantage is your data and workflow, not the engine.'],
+inst:{purpose:'Explain why AI suddenly became cheap for everyone else, and what that means for strategy.',
+flow:[['0–5','Bridge: “Why can a small start-up launch an AI product in a month?”'],['5–15','Foundation model idea, power-grid analogy, economics.'],['15–25','Try it: Build or reuse calculator, then the Adaptation picker.'],['25–31','Discussion: two retailers use the same model. Why would one win?'],['31–35','Check (5 questions).']],
+say:['“Most of us will never build an engine. We will build very good cars.”','“Try the lightest adaptation first. Prompting is free; fine-tuning is not.”','“RAG is an open-book exam. The book is your company’s documents.”'],
+ask:['What data does your company have that nobody else has?','What would happen to your product if your model vendor doubled its price?'],
+watch:['“We need to train our own model.” Almost never, for most companies.','“Fine-tuning teaches it our facts.” Retrieval is usually better for facts that change.','“The model is the product.” The workflow around it is.'],
+tips:['Calculator figures are illustrative; invite trainees to plug in guesses for their own organisation.','This is a short module. Keep the discussion to one question.'],
+materials:['Nothing extra']},
+acts:['buildreuse','adapt'],
+quiz:[
+ {q:'The defining trait of a foundation model is that it is…', o:['Trained once on broad data and reused for many tasks','Built separately for each task','Always small and cheap','Rule-based'], a:0, why:'Train once, adapt everywhere.'},
+ {q:'Giving the model your policy documents to look up while it answers is…', o:['Fine-tuning','Retrieval (RAG)','Overfitting','Diffusion'], a:1, why:'Retrieval hands relevant passages to the model at question time.'},
+ {q:'Which adaptation should you usually try first?', o:['Fine-tuning','Training a new model','Prompting','Buying GPUs'], a:2, why:'Prompting is the cheapest and fastest; move up only if needed.'},
+ {q:'Why do only a few companies build frontier foundation models?', o:['It is illegal for others','Training costs and computing needs are enormous','They are easy to build','Nobody else wants to'], a:1, why:'Hundreds of millions of dollars of compute, data and talent.'},
+ {q:'Which is most likely a durable advantage for a company using someone else’s model?', o:['Having an account with a popular model provider','Its proprietary data and deep workflow integration','Using the newest model name in marketing','Having a chatbot'], a:1, why:'Anyone can rent the model; not everyone has your data and workflow.'}
+]},
+
+/* ---------------- M6 ---------------- */
+{id:'m6', code:'M6', title:'Large Language Models: The Text Specialists', rung:6, start:'14:15', end:'15:05', mins:50, methods:['Lecture','Activity','Practice'],
+objectives:['Explain next-token prediction in plain words','Use the terms token, context window, temperature and knowledge cutoff','Explain why LLMs hallucinate and how to reduce it','Write a strong prompt with the CRAFT pattern'],
+notes:`
+<h3>What an LLM is</h3>
+<p>A large language model is a foundation model trained on a vast amount of text to do one simple thing: <strong>predict the next piece of text</strong>. Given “The store will be closed on Monday for…”, it estimates how likely each possible next word is, picks one, adds it, and repeats.</p>
+<p>That sounds too simple to be useful. But to predict the next word well across billions of pages, a model has to absorb grammar, facts, styles, and patterns of reasoning. At large scale, summarising, translating, drafting, answering and coding all emerge from that one skill. Your phone’s autocomplete does the same job with a tiny model; an LLM does it with a vast one.</p>
+<h3>Four words you need</h3>
+<ul>
+<li><strong>Token</strong>: text is chopped into chunks, often part of a word. “Unbelievable” might be “un-believ-able”. A rough guide is 100 tokens ≈ 75 English words.</li>
+<li><strong>Context window</strong>: how much text the model can consider at once, including your question, any documents and its own answer. Think of it as the size of the desk it works on.</li>
+<li><strong>Temperature</strong>: how adventurous its word choices are. Low gives predictable, consistent answers. High gives varied, creative ones.</li>
+<li><strong>Knowledge cutoff</strong>: the model only knows the world up to when its training data was collected, unless it is given tools like search or your documents.</li>
+</ul>
+<h3>Why LLMs hallucinate</h3>
+<p>An LLM is optimised to produce <em>plausible</em> text, not to look things up. If it lacks the fact, it can fill the gap with something that sounds right. It has no built-in sense of “I don’t know”.</p>
+<p>How to reduce it:</p>
+<ul>
+<li>Give it the source text and ask it to answer only from that.</li>
+<li>Ask it to quote or cite the passage it used.</li>
+<li>Use low temperature for factual work.</li>
+<li>Check anything that matters, especially numbers, names, dates and legal claims.</li>
+</ul>
+<h3>Prompting that works: CRAFT</h3>
+<ul>
+<li><strong>C</strong>ontext: the situation and background facts.</li>
+<li><strong>R</strong>ole: who the model should act as.</li>
+<li><strong>A</strong>sk: the specific task.</li>
+<li><strong>F</strong>ormat: length, structure, headings, bullets.</li>
+<li><strong>T</strong>one and limits: voice, audience, what not to say.</li>
+</ul>
+<p>A prompt is a briefing. Brief it like you would brief a smart new colleague who knows nothing about your company.</p>`,
+example:{title:'Weak prompt vs strong prompt', html:`<p><strong>Weak:</strong> “Write an email about the schedule change.”</p><p><strong>Strong:</strong> “Our Pune store is moving Saturday opening from 8:00 to 9:00 from 12 October because early footfall is low; 40 associates are affected (context). You are an HR communications specialist (role). Write an email to associates announcing the change and what it means for their shifts (ask). Subject line plus under 150 words, with a three-bullet ‘what changes for you’ section (format). Warm and clear, no jargon; don’t promise any pay changes; say to contact the store manager, Anita (tone and limits).”</p><p>The strong version takes a minute longer to write and saves three rounds of edits.</p>`},
+terms:[['Large language model (LLM)','A foundation model specialised in text, trained to predict the next token.'],['Token','A chunk of text, often part of a word, that the model reads and writes.'],['Context window','The maximum amount of text the model can consider at once.'],['Temperature','A setting controlling how varied or predictable word choices are.'],['Knowledge cutoff','The date after which the model has no training data.'],['Prompt','The instructions and information you give the model.']],
+takeaways:['LLMs generate text by repeatedly predicting a likely next token.','They are fluent, not factual. Ground them in sources and check what matters.','A good prompt is a good briefing: use CRAFT.'],
+inst:{purpose:'Demystify chat assistants and give trainees a skill they can use tomorrow morning.',
+flow:[['0–5','Hook: type a phrase on your phone and keep tapping the middle suggestion. Read out the result. “That’s a tiny language model.”'],['5–15','Next-token prediction, tokens, context window. Refer back to the human-generator energiser from M4.'],['15–25','Try it: Next-word game. Move temperature from 0.1 to 2. Ask what setting they would want for HR policy answers.'],['25–32','Hallucination and knowledge cutoff. Show one real hallucination if you have a safe example.'],['32–45','Try it: CRAFT builder. Pairs write a prompt for a real task from their job, then swap and critique.'],['45–50','Check (5 questions).']],
+say:['“It’s autocomplete that read the library.”','“It is optimised to sound right, not to be right. Your job is the ‘be right’ part.”','“Brief it like a smart new starter who has never seen your company.”'],
+ask:['What is a task you do every week that is mostly writing?','What would you need to paste into the prompt so it could answer from facts instead of guessing?'],
+watch:['“It looks things up on the internet.” Only if it has a search tool; otherwise it generates from training.','“It remembers our last conversation.” Only within its context window, or if a memory feature is switched on.','“It understands like a person.” Reasonable people disagree; what matters is testing it on your task.'],
+tips:['This is the module trainees will use most. Protect the CRAFT practice time.','Collect the best prompts from pairs and share them after the course.','If you have approved access to a real assistant, run the weak and strong prompts live.'],
+materials:['Your phone for the autocomplete hook','Optional: approved LLM tool on screen']},
+acts:['nextword','craft'],
+quiz:[
+ {q:'At its core, an LLM is trained to…', o:['Predict the next token','Store every web page','Follow hand-written grammar rules','Search a database'], a:0, why:'Everything else emerges from next-token prediction at scale.'},
+ {q:'Raising the temperature makes answers…', o:['More predictable','More varied and creative, less predictable','Shorter','More accurate'], a:1, why:'Higher temperature spreads probability to less likely words.'},
+ {q:'The context window is…', o:['The chat app’s screen size','How much text the model can consider at once','The model’s training date','A security setting'], a:1, why:'Think of it as the size of the model’s desk.'},
+ {q:'The best way to reduce hallucination about company policy is to…', o:['Ask the question in capital letters','Give the model the policy text and ask it to answer only from it and cite the passage','Raise the temperature','Ask it to be confident'], a:1, why:'Grounding in the source plus citations lets you verify.'},
+ {q:'Which change most improves the prompt “Write a summary”?', o:['Adding “please”','Adding the context, the audience and the format needed','Making it shorter','Adding emojis'], a:1, why:'Context, audience and format are the CRAFT elements that matter most.'}
+]},
+
+/* ---------------- M7 ---------------- */
+{id:'m7', code:'M7', title:'Multimodal Models: Beyond Text', rung:7, start:'15:20', end:'15:50', mins:30, methods:['Demo','Activity'],
+objectives:['Define multimodal and give workplace examples','Explain in plain words how one model relates images, sound and text','Name the specific risks of multimodal AI'],
+notes:`
+<h3>What multimodal means</h3>
+<p>A <strong>modality</strong> is a type of data: text, images, audio, video. A <strong>multimodal</strong> model handles several of them together, both as input and output. It is like a colleague who can read the report, look at the photo and listen to the voicemail at the same time, and connect them.</p>
+<h3>How it works, simply</h3>
+<p>Each input is turned into the same internal “language” of numbers. A photo of a spill, the spoken word “spill” and the written word “hazard” end up close together in that space. That shared space is what lets the model answer a spoken question about a picture.</p>
+<h3>Everyday uses</h3>
+<ul>
+<li>Photograph a shelf and ask which products are running low.</li>
+<li>Snap a supplier invoice and pull out the amount, date and number.</li>
+<li>Dictate a voice note on a store walk and get a structured checklist.</li>
+<li>Summarise video footage of a loading-dock incident.</li>
+<li>Describe product photos aloud for a visually impaired shopper.</li>
+<li>Live translation of a spoken conversation.</li>
+</ul>
+<h3>Cautions</h3>
+<ul>
+<li><strong>Privacy and consent</strong>: photos and recordings capture faces, voices and names of people who never agreed.</li>
+<li><strong>Visual mistakes</strong>: miscounting items, misreading small print or handwriting.</li>
+<li><strong>Deepfakes</strong>: realistic fake audio and video are now cheap to make. Verify unusual requests through a second channel.</li>
+</ul>`,
+example:{title:'The hands-free store walk', html:`<p>A district manager walks a store, talking into their phone and snapping photos: “Freezer door in aisle 9 isn’t sealing… end-cap display is still last week’s promotion…” A multimodal model turns the voice note and photos into a visit report: issues listed by priority, each with its photo attached, and a draft task for the store manager. What used to take an hour of typing after the visit now takes a few minutes of checking.</p>`},
+terms:[['Modality','A type of data: text, image, audio or video.'],['Multimodal model','A model that works across more than one modality.'],['Speech-to-text','Turning spoken audio into written text.'],['Text-to-speech','Turning written text into spoken audio.'],['OCR','Optical character recognition: reading printed or handwritten text from images.']],
+takeaways:['Multimodal models connect text, images, audio and video in one system.','They unlock hands-free and camera-based work.','They raise sharper privacy and deepfake risks.'],
+inst:{purpose:'Show the widening range of inputs, and prepare the ground for agents.',
+flow:[['0–8','Teach with a live demo if you have an approved tool: photograph something in the room and ask a question about it.'],['8–20','Try it: Modality matcher, in pairs.'],['20–26','Cautions: privacy, visual errors, deepfakes. Tell the story of a “CEO voice” fraud call.'],['26–30','Check (4 questions).']],
+say:['“Everything becomes numbers in the same space. That’s how a picture and a sentence can be compared.”','“If a video of your boss asks for an urgent transfer, call your boss.”'],
+ask:['Which part of your job would be easier if you could just point your phone at it?','Whose faces or voices might your photos capture without consent?'],
+watch:['“It sees perfectly.” It miscounts and misreads, especially small text.','“Multimodal means many models glued together.” Increasingly it is one model.'],
+tips:['After the afternoon break energy is low; get people standing and photographing something.','Do not photograph trainees without consent, even for a demo.'],
+materials:['Optional: approved multimodal tool and a few objects to photograph']},
+acts:['modality'],
+quiz:[
+ {q:'A multimodal model is one that…', o:['Handles several types of data such as text, images and audio','Has many users','Runs on many computers','Only works with video'], a:0, why:'Modality means a type of data.'},
+ {q:'Photographing an invoice and extracting the total uses which modalities?', o:['Audio only','Image and text','Video only','None'], a:1, why:'An image goes in; text comes out.'},
+ {q:'A risk that is sharper for multimodal AI is…', o:['It cannot write text','Privacy of faces and voices captured in images and recordings','It is always slower','It needs rules'], a:1, why:'Images and audio capture people who may not have consented.'},
+ {q:'How does a multimodal model relate a photo to a sentence?', o:['It prints both and compares','It converts both into a shared internal representation of numbers','A person labels each photo live','It cannot'], a:1, why:'A shared numerical space lets different inputs be compared.'}
+]},
+
+/* ---------------- M8 ---------------- */
+{id:'m8', code:'M8', title:'AI Agents: From Answering to Acting', rung:8, start:'15:50', end:'16:25', mins:35, methods:['Lecture','Simulation','Discussion'],
+objectives:['Explain what makes an agent different from a chatbot','Describe the plan–act–observe loop','Choose an autonomy level and human checkpoints for a task','Explain why errors compound over many steps'],
+notes:`
+<h3>From answering to acting</h3>
+<p>A chatbot <strong>answers</strong>. An agent <strong>acts</strong>. An AI agent is a system given a <strong>goal</strong>, a set of <strong>tools</strong> (calendar, email, databases, the web, your scheduling system) and <strong>permission</strong> to take steps. It works in a loop:</p>
+<ol><li><strong>Plan</strong>: break the goal into steps.</li><li><strong>Act</strong>: use a tool.</li><li><strong>Observe</strong>: read the result.</li><li><strong>Adjust</strong>: change the plan if needed, and repeat until done or stuck.</li></ol>
+<p><strong>Analogy:</strong> an encyclopedia versus a capable intern with logins. The encyclopedia tells you things. The intern gets things done, and can also make mistakes inside your real systems.</p>
+<h3>Levels of autonomy</h3>
+<div class="tbl-wrap"><table class="mini"><thead><tr><th>Level</th><th>What the agent does</th><th>Like driving with…</th></tr></thead><tbody>
+<tr><td>1. Suggest</td><td>Recommends; you do it</td><td>A sat-nav giving directions</td></tr>
+<tr><td>2. Draft for approval</td><td>Prepares the action; a person confirms</td><td>Parking assist that asks before steering</td></tr>
+<tr><td>3. Act with oversight</td><td>Acts on reversible tasks; you are notified and can undo</td><td>Lane-keeping with your hands on the wheel</td></tr>
+<tr><td>4. Act autonomously</td><td>Acts alone within strict limits</td><td>A self-driving shuttle on a fixed route</td></tr></tbody></table></div>
+<h3>Why agents are hard</h3>
+<ul>
+<li><strong>Errors compound.</strong> If each step is 95% reliable, ten steps in a row succeed only about 60% of the time.</li>
+<li><strong>Permissions.</strong> An agent with access to email and payroll can do real damage if it is wrong or tricked.</li>
+<li><strong>Accountability.</strong> When the agent acts, a named person is still responsible.</li>
+<li><strong>Cost.</strong> Many steps mean many model calls.</li>
+</ul>
+<h3>Designing agents responsibly</h3>
+<ul>
+<li><strong>Least privilege</strong>: give only the access the task needs.</li>
+<li><strong>Human checkpoints</strong> before actions that are irreversible, costly, or affect people.</li>
+<li><strong>Logs</strong> of every step, so you can see what happened.</li>
+<li><strong>Clear stop conditions</strong>: when to give up and hand over to a person.</li>
+</ul>`,
+example:{title:'Finding cover for a sick associate', html:`<p>Sam calls in sick for Saturday’s 9:00–17:00 bakery shift. An agent reads the schedule, finds associates trained for the bakery who are free, checks labour rules and overtime, ranks candidates, messages the best one, waits for a reply, updates the schedule, and tells the manager. A person should approve the steps that contact staff, cost money, or change the official schedule. You will run this in Try it.</p>`},
+terms:[['AI agent','A system that pursues a goal over several steps by planning and using tools.'],['Tool use','The agent calling another system, such as a calendar or database.'],['Autonomy level','How much the agent may do without a person approving.'],['Human-in-the-loop','A person reviews or approves at key points.'],['Guardrail','A limit or check that stops unsafe actions.'],['Least privilege','Giving the agent only the access it needs.']],
+takeaways:['Agents plan and act with tools; chatbots only respond.','Match autonomy to risk and put people at the costly or irreversible steps.','Small per-step error rates compound over long tasks.'],
+inst:{purpose:'Show where AI is heading and give trainees a practical way to think about control.',
+flow:[['0–8','Chatbot vs agent, the loop, autonomy levels with the driving analogy.'],['8–22','Try it: Agent run. Trainees decide where to require approval. Compare scores; discuss disagreements.'],['22–27','Try it: Errors compound calculator. Ask what per-step reliability a 20-step task needs.'],['27–31','Responsible design principles.'],['31–35','Check (5 questions).']],
+say:['“Every approval you add makes it safer and slower. Put approvals where mistakes are expensive.”','“95% per step sounds great until you do ten steps.”','“The agent acts; a person is still accountable.”'],
+ask:['Which step in the shift-cover story would you never let an agent do alone? Why?','Which dull multi-step task in your week would you hand to an agent with approval?'],
+watch:['“Agents are just chatbots.” They take actions in real systems.','“More autonomy is always better.” It depends on the cost of an error.','“If it asks for approval, it’s safe.” Only if the approver reads what they approve.'],
+tips:['Agent run scores will differ. The discussion of why is the learning.','Tie back to M1: agents inherit the probabilistic nature of the models inside them.'],
+materials:['Nothing extra']},
+acts:['agent','compound'],
+quiz:[
+ {q:'What makes a system an AI agent?', o:['It has a friendly name','It plans and takes actions with tools toward a goal','It only answers questions','It runs on a phone'], a:1, why:'Goal, tools and the plan–act–observe loop.'},
+ {q:'If each step is 95% reliable, ten steps in a row succeed about…', o:['95% of the time','60% of the time','10% of the time','100% of the time'], a:1, why:'0.95 multiplied by itself ten times is about 0.60.'},
+ {q:'Which action most needs human approval?', o:['Reading the published schedule','Offering overtime pay and changing the official schedule','Listing trained associates','Summarising the plan'], a:1, why:'It costs money, affects people and changes an official record.'},
+ {q:'“Least privilege” means…', o:['The agent gets only the access it needs for the task','The agent has admin rights to everything','Staff have fewer rights','The cheapest model is used'], a:0, why:'Limit the damage a wrong or tricked agent can do.'},
+ {q:'In “draft for approval” autonomy…', o:['The agent acts and tells no one','The agent prepares the action and a person confirms before it happens','A person does all the work','The agent refuses to act'], a:1, why:'Level 2 keeps a person as the final check.'}
+]},
+
+/* ---------------- M9 ---------------- */
+{id:'m9', code:'M9', title:'Capstone: Putting AI to Work', rung:0, start:'16:25', end:'17:00', mins:35, methods:['Team exercise','Assessment'],
+objectives:['Place any AI product on the ladder','Pick the right rung for a real business problem','Complete an AI Opportunity Canvas','Pass the final assessment'],
+notes:`
+<h3>The whole ladder, one line each</h3>
+<div class="tbl-wrap"><table class="mini"><thead><tr><th>Rung</th><th>What’s new</th><th>Question to ask</th></tr></thead><tbody>
+<tr><td>1. Rules</td><td>People write the logic</td><td>Can I write the rule down?</td></tr>
+<tr><td>2. Machine learning</td><td>Learns patterns from tables</td><td>Do I have good historical examples?</td></tr>
+<tr><td>3. Deep learning</td><td>Learns from images, sound, text</td><td>Is the signal in pixels, audio or words?</td></tr>
+<tr><td>4. Generative AI</td><td>Creates new content</td><td>Do I need a draft or a decision?</td></tr>
+<tr><td>5. Foundation models</td><td>One model, many tasks</td><td>Prompt, retrieve or fine-tune?</td></tr>
+<tr><td>6. LLMs</td><td>Text specialists</td><td>How will I ground it in facts?</td></tr>
+<tr><td>7. Multimodal</td><td>Many data types together</td><td>Whose privacy is in the photo?</td></tr>
+<tr><td>8. Agents</td><td>Plans and acts</td><td>Where must a person approve?</td></tr></tbody></table></div>
+<h3>Three truths to take back to work</h3>
+<ol>
+<li><strong>Capability comes from data and context.</strong> Your organisation’s data, documents and know-how are the raw material. Look after them.</li>
+<li><strong>AI is probabilistic.</strong> Design every use for the case where it is wrong: who checks, what it costs, how you recover.</li>
+<li><strong>The model and the company are separate.</strong> Pick vendors carefully, avoid lock-in where you can, and invest in what is yours: data, workflow and trust.</li>
+</ol>
+<h3>Choose the lowest rung that works</h3>
+<p>Do not use an LLM where a formula works. Do not build an agent where a draft will do. Higher rungs bring more capability and more risk.</p>
+<h3>Capstone: AI Opportunity Canvas</h3>
+<p>In teams of three or four, pick a real problem from your work and complete the canvas in Try it. Your instructor scores it with the rubric on the Certification page. Then sit the final assessment individually.</p>`,
+example:{title:'A good canvas in one sentence', html:`<p>“Weekend understaffing costs our Pune store about 60 lost sales hours a month; we will use machine learning on two years of footfall, weather and promotion data to forecast Saturday demand, a scheduler will approve every suggested roster, and we will measure understaffed hours against last quarter’s baseline.”</p>`},
+terms:[['AI Opportunity Canvas','A one-page plan for an AI use case: problem, rung, data, risk, checkpoint and measure.'],['Baseline','How things perform today, before AI, so you can measure change.']],
+takeaways:['Every AI product sits on the ladder; name its rung.','Choose the lowest rung that solves the problem.','Plan for wrong answers before you plan for right ones.'],
+inst:{purpose:'Consolidate, apply, and assess.',
+flow:[['0–2','Recap the ladder. Move three sticky notes from the M0 wall onto the right rungs.'],['2–12','Capstone canvas in teams. Circulate and push teams on “what if it’s wrong?”'],['12–15','One team presents in 60 seconds; the room names its rung.'],['15–35','Final assessment, individually (20 minutes, 25 questions). Collect canvases for scoring.']],
+say:['“Choose the lowest rung that works.”','“If you can’t say what happens when it’s wrong, you’re not ready to launch it.”','“Thank you. You now know more about how AI works than most people who talk about it.”'],
+ask:['Which rung does your canvas sit on, and could a lower rung do the job?','What is the first small step you will take on Monday?'],
+watch:['Teams choosing an agent for everything. Ask whether a draft-for-approval step would do.','Canvases with no baseline. Without a baseline you cannot prove value.'],
+tips:['Score canvases within five working days and send scores to trainees for their certificate.','Photograph the finished sticky-note ladder for the course record.','Invite trainees to email you one prompt that worked for them in the next week.'],
+materials:['Canvas printouts (optional; the page has a digital version)','Rubric for scoring','Timer for the assessment']},
+acts:['canvas'], quiz:null}
+];
+
+const FINAL_BANK = {
+m1:[
+ {q:'A retailer wants software that applies a fixed 10% staff discount at checkout. Which approach fits best?', o:['Rules','Machine learning','Generative AI','An AI agent'], a:0, why:'Known, exact, stable logic belongs to rules.'},
+ {q:'What does it mean that modern AI “inverts” traditional software?', o:['It runs programs backwards','Instead of writing rules, people supply examples, objectives or context and the model infers the pattern','It deletes old software','It needs no computers'], a:1, why:'Rules plus data gave answers; now examples plus objectives give a model.'},
+ {q:'Why can AI products often be built faster than traditional software?', o:['AI engineers type faster','Behaviour comes from data and instructions rather than hand-coding every case','AI needs no testing','Regulation does not apply'], a:1, why:'You describe or show; you do not code every rule.'},
+ {q:'Which statement about probabilistic systems is most accurate?', o:['They are always wrong','They give the most likely answer, which is usually right but can vary and must be checked','They never change','They are the same as rules'], a:1, why:'Measure accuracy and design for the wrong case.'}
+],
+m2:[
+ {q:'Predicting next week’s bread demand from past sales, weather and holidays is…', o:['Supervised machine learning on structured data','A diffusion model','Rule-based software','An agent'], a:0, why:'Past rows with known answers, in a table.'},
+ {q:'In machine learning, a feature is…', o:['A marketing highlight','An input column the model uses, such as temperature','The final answer','A bug'], a:1, why:'Features are inputs; the label is the target.'},
+ {q:'Why test a model on data it has not seen?', o:['To make training faster','To check it learned general patterns rather than memorising','To save storage','It is not necessary'], a:1, why:'Unseen data exposes overfitting.'},
+ {q:'A hiring model trained on ten years of past decisions favours one group. The most likely cause is…', o:['A broken computer','Historical bias in the training data','Too much electricity','Low temperature'], a:1, why:'Models copy the patterns, including the unfair ones, in their history.'}
+],
+m3:[
+ {q:'Which task most needs deep learning rather than classic machine learning?', o:['Predicting sales from a table','Recognising products in shelf photos','Adding up a bill','Sorting names alphabetically'], a:1, why:'The signal is in raw pixels.'},
+ {q:'What do the layers of a neural network do?', o:['Store backups','Each transforms signals, building simple features into complex ones','Hold rules written by staff','Encrypt data'], a:1, why:'Edges, then shapes, then objects.'},
+ {q:'Why are GPUs important for deep learning?', o:['They look good','They do many simple calculations in parallel','They store the internet','They write rules'], a:1, why:'Networks need millions of small calculations at once.'},
+ {q:'A model misreads a stop sign with a few stickers on it. This shows that…', o:['Stickers are illegal','Deep models can be fooled by small changes people ignore','The model is rule-based','The model has a knowledge cutoff'], a:1, why:'Robustness is a real limitation.'}
+],
+m4:[
+ {q:'Which of these is a generative AI task?', o:['Flagging a fraudulent transaction','Writing a first draft of a job advert','Forecasting footfall','Sorting emails into spam'], a:1, why:'It creates new content.'},
+ {q:'An AI summary cites a policy clause that does not exist. This is…', o:['Drift','Hallucination','Overfitting','Least privilege'], a:1, why:'Confident, fluent and false.'},
+ {q:'For 500 product descriptions, the best process is…', o:['Publish AI output directly','AI drafts from product data; a person reviews before publishing','Write all by hand','Let customers edit them'], a:1, why:'The time saving comes from faster review.'},
+ {q:'Why can generative AI give different outputs for the same request?', o:['It is broken','It samples from probabilities when choosing each piece','It forgets the request','It uses a different language each time'], a:1, why:'Sampling from likelihoods introduces variation.'}
+],
+m5:[
+ {q:'Which best describes a foundation model?', o:['A small model for one task','A large general-purpose model trained once and adapted to many tasks','A rule book','A database'], a:1, why:'Train once, reuse everywhere.'},
+ {q:'Staff need answers from an HR handbook that is updated monthly. The best adaptation is…', o:['Fine-tuning every month','Retrieval (RAG) over the current handbook','Train a new foundation model','Raise the temperature'], a:1, why:'Retrieval keeps answers tied to the current document.'},
+ {q:'A company builds its product on a third-party model. A key business risk is…', o:['The model is too small','The vendor changes price or model behaviour','Customers like it too much','The model has no API'], a:1, why:'Dependence on the engine maker.'},
+ {q:'An open-weight model is one that…', o:['Is very light','Has published internal settings so you can run it yourself','Is free of all risk','Only reads text'], a:1, why:'You can host it on your own infrastructure.'}
+],
+m6:[
+ {q:'At its core, an LLM generates text by…', o:['Copying web pages','Repeatedly predicting a likely next token','Looking up a dictionary','Following grammar rules written by linguists'], a:1, why:'Next-token prediction at scale.'},
+ {q:'For consistent, repeatable answers to policy questions, set temperature…', o:['Low','High','Randomly','It makes no difference'], a:0, why:'Low temperature favours the most likely words.'},
+ {q:'An LLM confidently describes an event after its training date. Why is this risky?', o:['It has a knowledge cutoff and may be inventing details','Events are private','It is too slow','Dates are not tokens'], a:0, why:'Without a search tool, it cannot know recent events.'},
+ {q:'Which prompt is strongest?', o:['“Write a notice.”','“Write a notice about the holiday, please.”','“You are a store manager. Write a 60-word notice for shoppers saying the store closes at 14:00 on 2 October for the holiday, friendly tone, include the reopening time 08:00 on 3 October.”','“NOTICE!!!”'], a:2, why:'It has role, ask, context, format and tone.'},
+ {q:'Roughly what is a token?', o:['A security password','A chunk of text, often part of a word','A whole paragraph','A coin used to pay for AI'], a:1, why:'About 100 tokens ≈ 75 English words.'}
+],
+m7:[
+ {q:'A manager records a voice note and takes photos on a store visit, and gets a written report. Which capability is this?', o:['Rule-based software','Multimodal AI','Unsupervised learning','Fine-tuning'], a:1, why:'Audio and images in, text out.'},
+ {q:'Which is a known limitation of models that read images?', o:['They cannot process colour','They can miscount items or misread small text','They only work at night','They never make errors'], a:1, why:'Always check counts and small print.'},
+ {q:'Privacy concerns are sharper for multimodal AI because…', o:['Text is always public','Images and audio can capture faces and voices of people who did not consent','It uses more electricity','It is newer'], a:1, why:'Consent matters for people in the frame.'}
+],
+m8:[
+ {q:'The difference between a chatbot and an AI agent is that an agent…', o:['Has a nicer voice','Pursues a goal over several steps using tools','Cannot use language','Is always a robot'], a:1, why:'It acts, not just answers.'},
+ {q:'Which action should require human approval?', o:['Reading an order history','Issuing a $2,000 customer refund','Listing open tickets','Drafting a summary'], a:1, why:'It is costly and hard to reverse.'},
+ {q:'A 10-step task where each step is 90% reliable succeeds end-to-end about…', o:['90% of the time','65% of the time','35% of the time','9% of the time'], a:2, why:'0.9 to the power of 10 is about 0.35.'},
+ {q:'Least privilege means…', o:['Give the agent only the access it needs','Give the agent full admin rights','Remove all staff access','Use the lowest temperature'], a:0, why:'It limits the damage from errors or misuse.'},
+ {q:'An agent drafts supplier emails; a buyer reviews and clicks send. This autonomy level is…', o:['Suggest','Draft for approval','Act with oversight','Fully autonomous'], a:1, why:'A person confirms before the action happens.'}
+]};
+
+const BLUEPRINT = [['m1',3],['m2',3],['m3',3],['m4',3],['m5',3],['m6',4],['m7',2],['m8',4]];
+
+const RUBRIC = [
+ {c:'Problem framing', d:['Vague or no business problem','Problem named, but not who it affects or why it matters','Clear problem, who it affects, and why it matters','Specific, quantified problem tied to a business goal']},
+ {c:'Right rung for the job', d:['No approach chosen, or one that cannot do the task','Approach named but mismatched, such as an LLM where a formula works','Suitable rung chosen with a reason','Best-fit rung, alternatives considered, including plain rules']},
+ {c:'Data and context', d:['No data identified','Data named, but availability or quality not considered','Sources, owner and quality issues identified','As 3, plus privacy, consent and how context reaches the model']},
+ {c:'Risk and human oversight', d:['No risks identified','Generic risk only (“AI may be wrong”)','Specific failure modes and a named human checkpoint','Failure modes and their cost, checkpoint, escalation, and a fallback']},
+ {c:'Measuring value', d:['No measure','Measure named but not observable','Observable measure with a baseline','Baseline, target, and how accuracy and value are tracked after launch']}
+];
+</script>
+<script>
+(function(){
+'use strict';
+const $ = (s, el) => (el || document).querySelector(s);
+const $$ = (s, el) => Array.from((el || document).querySelectorAll(s));
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function el(html){ const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; }
+const store = {
+  get(k, d){ try { const v = localStorage.getItem('r2a:' + k); return v == null ? d : JSON.parse(v); } catch(e){ return d; } },
+  set(k, v){ try { localStorage.setItem('r2a:' + k, JSON.stringify(v)); } catch(e){} }
+};
+const S = { mode: store.get('mode','trainee'), scores: store.get('scores',{}), exam: store.get('exam',null), sub:{} };
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+let redrawers = [];
+const themeChanged = () => redrawers.forEach(f => { try { f(); } catch(e){} });
+try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', themeChanged); } catch(e){}
+new MutationObserver(themeChanged).observe(document.documentElement, {attributes:true, attributeFilter:['data-theme']});
+window.addEventListener('resize', () => { clearTimeout(window.__rz); window.__rz = setTimeout(themeChanged, 120); });
+
+const CHECK_MODS = MODULES.filter(m => m.quiz && m.id !== 'm0');
+const modById = id => MODULES.find(m => m.id === id);
+
+/* ---------- mode ---------- */
+function applyMode(){
+  document.documentElement.dataset.mode = S.mode;
+  $('#modeT').setAttribute('aria-pressed', S.mode === 'trainee');
+  $('#modeI').setAttribute('aria-pressed', S.mode === 'instructor');
+}
+$('#modeT').addEventListener('click', () => { S.mode = 'trainee'; store.set('mode', S.mode); applyMode(); route(); });
+$('#modeI').addEventListener('click', () => { S.mode = 'instructor'; store.set('mode', S.mode); applyMode(); route(); });
+
+/* ---------- nav ---------- */
+const PAGES = [
+  {id:'overview', label:'Course overview', group:'Start here', c:'—'},
+  {id:'plan', label:'Session plan', group:'Start here', c:'—'},
+  ...MODULES.map(m => ({id:m.id, label:m.title.split(':')[0], group:'Modules', c:m.code, t:m.start})),
+  {id:'exam', label:'Final assessment', group:'Assessment', c:'—'},
+  {id:'cert', label:'Certification', group:'Assessment', c:'—'}
+];
+function updateProgress(){
+  const done = CHECK_MODS.filter(m => S.scores[m.id]).length;
+  $('#progTxt').textContent = done + ' of ' + CHECK_MODS.length + ' checks';
+  $('#progBar').style.width = (100 * done / CHECK_MODS.length) + '%';
+}
+function renderNav(cur){
+  let html = '', g = '';
+  PAGES.forEach(p => {
+    if (p.group !== g){ g = p.group; html += '<h4>' + g + '</h4>'; }
+    const done = (S.scores[p.id] && p.id !== 'm0') || (p.id === 'exam' && S.exam && S.exam.best >= 70);
+    html += '<a href="#' + p.id + '"' + (p.id === cur ? ' aria-current="page"' : '') + '><span class="c">' + p.c + '</span><span>' + esc(p.label) + '</span>' +
+      (done ? '<span class="done" aria-label="done">✓</span>' : (p.t ? '<span class="t">' + p.t + '</span>' : '<span></span>')) + '</a>';
+    if (BREAKS[p.id]) html += '<div class="brk">' + BREAKS[p.id].start + ' ' + BREAKS[p.id].label + '</div>';
+  });
+  $('#rail').innerHTML = html;
+  $('#mnav').innerHTML = PAGES.map(p => '<option value="' + p.id + '"' + (p.id === cur ? ' selected' : '') + '>' + (p.c !== '—' ? p.c + ' · ' : '') + esc(p.label) + '</option>').join('');
+  updateProgress();
+}
+$('#mnav').addEventListener('change', e => { location.hash = e.target.value; });
+
+let current = null;
+function route(){
+  let id = (location.hash || '').slice(1);
+  if (!PAGES.some(p => p.id === id)) id = 'overview';
+  const changed = id !== current;
+  current = id;
+  redrawers = [];
+  if (window.__examTimer && id !== 'exam'){ clearInterval(window.__examTimer); window.__examTimer = null; }
+  renderNav(id);
+  const v = $('#view'); v.innerHTML = '';
+  if (id === 'overview') pageOverview(v);
+  else if (id === 'plan') pagePlan(v);
+  else if (id === 'exam') pageExam(v);
+  else if (id === 'cert') pageCert(v);
+  else pageModule(v, modById(id));
+  if (changed) window.scrollTo(0, 0);
+}
+window.addEventListener('hashchange', route);
+
+/* ---------- overview ---------- */
+function pageOverview(v){
+  const nq = MODULES.reduce((s, m) => s + (m.quiz ? m.quiz.length : 0), 0);
+  const nb = Object.values(FINAL_BANK).reduce((s, a) => s + a.length, 0);
+  const na = MODULES.reduce((s, m) => s + m.acts.length, 0);
+  v.appendChild(el(`<div class="page">
+  <section class="hero">
+    <span class="eyebrow">AI foundations · one-day course · no technical background needed</span>
+    <h1>Software used to follow rules. Now it learns them.</h1>
+    <p class="lede col">For fifty years a person wrote the rules and the machine executed them exactly. Modern AI turns that around: people supply examples, objectives or context, and a statistical model produces the answer. This course climbs the eight rungs from rule-based software to AI agents, one hands-on module at a time.</p>
+    <div class="row"><a class="btn acc" href="#m0" style="text-decoration:none">Start with M0</a><a class="btn ghost" href="#plan" style="text-decoration:none">See the session plan</a></div>
+  </section>
+  <section class="stack col">
+    <span class="eyebrow">The one shift that matters</span>
+    <div class="flip">
+      <div class="flip-row"><span class="flip-tag">Traditional</span><span class="box">Rules</span><span class="op">+</span><span class="box">Data</span><span class="op">→</span><span class="box strong">Answers</span></div>
+      <div class="flip-row"><span class="flip-tag">Modern AI</span><span class="box">Examples</span><span class="op">+</span><span class="box">Objectives &amp; context</span><span class="op">→</span><span class="box strong">Model</span><span class="op">→</span><span class="box">Answers for new cases</span></div>
+    </div>
+    <p class="muted">That is why AI products can be built faster, why they behave probabilistically, and why the model and the company using it are increasingly separate assets.</p>
+  </section>
+  <section class="stack">
+    <h2>The ladder</h2>
+    <p class="muted col">Each rung keeps what came before and adds one ability. Select a rung to open its module.</p>
+    <div class="ladder">${LADDER.slice().reverse().map(r => `<a class="rung" href="#${r.mod}"><span class="n">${r.n}</span><span><span class="nm">${esc(r.name)}</span><br><span class="gs">${esc(r.gist)} <em>e.g. ${esc(r.ex)}</em></span></span><span class="go">${modById(r.mod).code} →</span></a>`).join('')}</div>
+  </section>
+  <section class="stack">
+    <h2>The course at a glance</h2>
+    <div class="statrow">
+      <div class="stat"><span class="v">8 h</span><span class="l">09:00–17:00, three breaks</span></div>
+      <div class="stat"><span class="v">10</span><span class="l">modules, M0 to M9</span></div>
+      <div class="stat"><span class="v">${na}</span><span class="l">hands-on activities</span></div>
+      <div class="stat"><span class="v">${nq}</span><span class="l">check questions with feedback</span></div>
+      <div class="stat"><span class="v">25</span><span class="l">final questions, drawn from ${nb}</span></div>
+      <div class="stat"><span class="v">3</span><span class="l">certificate levels</span></div>
+    </div>
+  </section>
+  <section class="grid2">
+    <div class="panel stack"><span class="label acc">Trainee mode</span><p>Read the notes, play with each activity, and answer the checks. Your progress is saved in this browser only. Pass the final assessment and add your capstone score to generate your certificate.</p></div>
+    <div class="panel stack"><span class="label warm">Instructor mode</span><p>Adds an <strong>Instructor notes</strong> tab to every module: minute-by-minute run of show, what to say, questions to ask, misconceptions to watch for, and materials. Switch with the toggle at the top.</p></div>
+  </section>
+  <section class="stack col">
+    <h2>Who this is for</h2>
+    <p>Store operations, HR, finance, merchandising, customer service, sales and leadership teams who want to understand how AI works, talk about it accurately, and spot where it helps and where it does not. Every idea is explained with everyday and workplace examples. There is no maths and no code.</p>
+  </section>
+  </div>`));
+}
+
+/* ---------- session plan ---------- */
+function pagePlan(v){
+  let rows = '';
+  MODULES.forEach(m => {
+    rows += `<tr><td class="num">${m.start}–${m.end}</td><td class="num">${m.mins}</td><td><a href="#${m.id}"><b>${m.code}</b> ${esc(m.title)}</a></td><td>${m.methods.map(x => `<span class="tag ${x}">${x}</span>`).join('')}</td><td>${m.acts.map(a => esc(ACT_TITLES[a])).join('; ')}</td><td>${m.quiz ? (m.id === 'm0' ? 'Pre-test (8)' : 'Check (' + m.quiz.length + ')') : 'Capstone + final (25)'}</td></tr>`;
+    if (BREAKS[m.id]){ const b = BREAKS[m.id]; rows += `<tr class="brk"><td>${b.start}–${b.end}</td><td>${b.mins}</td><td colspan="4">${b.label}</td></tr>`; }
+  });
+  const teach = MODULES.reduce((s, m) => s + m.mins, 0), brk = Object.values(BREAKS).reduce((s, b) => s + b.mins, 0);
+  const prep = store.get('prep', {});
+  const PREP = [
+    ['Week before','Confirm room, projector, Wi-Fi and one device per trainee or pair'],
+    ['Week before','Send trainees the link to this module and ask them to skim the Overview'],
+    ['Week before','Check your organisation’s policy on approved AI tools; prepare a live demo only with an approved tool'],
+    ['Day before','Run every Try it activity once on the room’s projector'],
+    ['Day before','Print the ladder poster, capstone canvas (optional) and rubric'],
+    ['Day before','Prepare two or three odd cat photos (M1) and a safe hallucination example (M6)'],
+    ['On the day','Set up the sticky-note wall and flip chart with the one idea'],
+    ['On the day','Set a visible clock; assign a timekeeper for the final assessment'],
+    ['After','Score capstone canvases within five working days and send scores to trainees'],
+    ['After','Record attendance, final scores and capstone scores in the training record']
+  ];
+  const page = el(`<div class="page">
+  <header class="mhead"><span class="eyebrow">Session plan</span><h1>The day, minute by minute</h1>
+  <p class="lede col">${teach} minutes of teaching and ${brk} minutes of breaks, from 09:00 to 17:00. Each module mixes a short explanation, a hands-on activity and a knowledge check. The heaviest hands-on work sits straight after lunch, when energy is lowest.</p></header>
+  <section class="stack"><h2>Learning outcomes</h2>
+  <p class="muted">By the end of the day, every trainee can:</p>
+  <ol class="obj col">
+    <li>Explain the difference between rule-based software and systems that learn from data, with an example of each.</li>
+    <li>Place any AI product on the eight-rung ladder and say what that rung adds.</li>
+    <li>Explain why AI is probabilistic and design a human checkpoint for when it is wrong.</li>
+    <li>Choose between prompting, retrieval and fine-tuning for a business need.</li>
+    <li>Write a clear, grounded prompt using the CRAFT pattern.</li>
+    <li>Set sensible autonomy levels and approvals for an AI agent.</li>
+    <li>Frame a real AI opportunity with data, risk and a measure of value.</li>
+  </ol></section>
+  <section class="stack"><h2>Timetable</h2>
+  <div class="tbl-wrap panel" style="padding:0"><table class="mini plan"><thead><tr><th>Time</th><th>Min</th><th>Module</th><th>Methods</th><th>Hands-on</th><th>Assessment</th></tr></thead><tbody>${rows}</tbody></table></div></section>
+  <section class="grid2">
+    <div class="panel stack"><h3>Delivery principles</h3><ul class="inst-list">
+      <li><strong>Example first, term second.</strong> Tell the story, then name the concept.</li>
+      <li><strong>No slide longer than eight minutes</strong> without a question or an activity.</li>
+      <li><strong>One idea on the wall</strong> all day: capability comes from data and context.</li>
+      <li><strong>Break it on purpose.</strong> Every activity has a way to fool the model. That is where understanding comes from.</li>
+      <li><strong>Use the room’s own work.</strong> Ask for examples from trainees’ jobs in every module.</li></ul></div>
+    <div class="panel stack"><h3>Managing energy</h3><ul class="inst-list">
+      <li>09:00–10:20: curiosity is high; teach the core shift.</li>
+      <li>Before lunch: keep M3 tight; people drift after 12:00.</li>
+      <li>After lunch: open M4 with the standing energiser.</li>
+      <li>After the afternoon break: get people photographing things (M7) and debating the agent (M8).</li>
+      <li>Last 20 minutes: quiet, individual final assessment.</li></ul></div>
+  </section>
+  <section class="grid2">
+    <div class="panel stack"><h3>Room and materials</h3><ul class="inst-list">
+      <li>Tables of four for pair and team work</li><li>Projector showing this module in Instructor mode</li><li>One device per trainee or pair, with this module open</li><li>Sticky notes, markers, flip chart</li><li>Printed ladder poster and rubric (optional)</li><li>Visible clock or timer</li></ul></div>
+    <div class="panel stack"><h3>Running it as two half-days</h3><p>Day 1 (3 h 45 min): M0–M4, ending with the Mini generator. Day 2 (3 h 45 min): a 10-minute recap using the ladder, then M5–M9. Move the pre-test to the start of day 1 and the final assessment to the end of day 2.</p>
+    <h3>Accessibility</h3><p>The course uses a high-legibility typeface and works on phones. Allow 25% extra time on the final assessment for trainees who need it, and pair trainees for activities if anyone prefers not to use a device.</p></div>
+  </section>
+  <section class="stack inst-only"><h2>Instructor preparation checklist</h2><p class="muted">Ticks are saved in this browser.</p>
+  <div class="panel"><ul class="checklist">${PREP.map((p, i) => `<li><label><input type="checkbox" id="prep${i}" ${prep[i] ? 'checked' : ''}><span><span class="label warm">${p[0]}</span> ${esc(p[1])}</span></label></li>`).join('')}</ul></div></section>
+  <p class="trainee-hint muted">Switch to Instructor mode to see the preparation checklist.</p>
+  </div>`);
+  $$('.checklist input', page).forEach((cb, i) => cb.addEventListener('change', () => { prep[i] = cb.checked; store.set('prep', prep); }));
+  v.appendChild(page);
+}
+
+/* ---------- module page ---------- */
+function pageModule(v, m){
+  const idx = MODULES.indexOf(m), prev = MODULES[idx - 1], next = MODULES[idx + 1];
+  const lad = LADDER.map(r => `<i class="${r.n === m.rung ? 'on' : (r.n < m.rung ? 'past' : '')}" style="height:${8 + r.n * 2.8}px"></i>`).join('');
+  const page = el(`<div class="page">
+    <header class="mhead">
+      <div class="meta"><span class="eyebrow">${m.code} · ${m.start}–${m.end} · ${m.mins} min</span>${m.rung ? `<span class="minilad" aria-label="Rung ${m.rung} of 8">${lad}</span><span class="eyebrow">Rung ${m.rung} of 8</span>` : ''}</div>
+      <h1>${esc(m.title)}</h1>
+      <div class="stack col"><span class="eyebrow">You will be able to</span><ul class="obj">${m.objectives.map(o => `<li>${esc(o)}</li>`).join('')}</ul></div>
+    </header>
+    <div class="tabs" role="tablist">
+      <button role="tab" data-t="notes">Trainee notes</button>
+      <button role="tab" data-t="inst" class="inst inst-only">Instructor notes</button>
+      <button role="tab" data-t="try">Try it</button>
+      <button role="tab" data-t="check">${m.quiz ? 'Check' : 'Final assessment'}</button>
+    </div>
+    <div id="tabpanel"></div>
+    <nav class="pager">${prev ? `<a href="#${prev.id}"><span class="eyebrow">← ${prev.code}</span><b>${esc(prev.title)}</b></a>` : '<span></span>'}${next ? `<a class="next" href="#${next.id}"><span class="eyebrow">${next.code} →</span><b>${esc(next.title)}</b></a>` : `<a class="next" href="#exam"><span class="eyebrow">Next →</span><b>Final assessment</b></a>`}</nav>
+  </div>`);
+  v.appendChild(page);
+  let tab = S.sub[m.id] || 'notes';
+  if (tab === 'inst' && S.mode !== 'instructor') tab = 'notes';
+  const show = t => {
+    S.sub[m.id] = t; redrawers = [];
+    $$('.tabs button', page).forEach(b => b.setAttribute('aria-selected', b.dataset.t === t));
+    const p = $('#tabpanel', page); p.innerHTML = '';
+    if (t === 'notes') renderNotes(p, m);
+    else if (t === 'inst') renderInst(p, m);
+    else if (t === 'try') renderTry(p, m);
+    else renderCheck(p, m);
+  };
+  $$('.tabs button', page).forEach(b => b.addEventListener('click', () => show(b.dataset.t)));
+  show(tab);
+}
+function renderNotes(p, m){
+  p.appendChild(el(`<div class="stack" style="gap:26px">
+    <div class="prose">${m.notes}</div>
+    <div class="example"><span class="label acc">Example</span><h3>${esc(m.example.title)}</h3>${m.example.html}</div>
+    <div class="stack"><h3>Key terms</h3><dl class="terms">${m.terms.map(t => `<dt>${esc(t[0])}</dt><dd>${esc(t[1])}</dd>`).join('')}</dl></div>
+    <div class="stack"><h3>Take away</h3><ul class="takeaways">${m.takeaways.map(t => `<li>${esc(t)}</li>`).join('')}</ul></div>
+  </div>`));
+}
+function renderInst(p, m){
+  const i = m.inst;
+  const list = (arr, cls) => `<ul class="inst-list ${cls || ''}">${arr.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
+  p.appendChild(el(`<div class="inst-wrap">
+    <div class="inst-banner"><b>Purpose</b><span>${esc(i.purpose)}</span></div>
+    <div class="stack"><h3>Run of show (${m.mins} min)</h3><div class="tbl-wrap"><table class="mini ros"><tbody>${i.flow.map(f => `<tr><td>${f[0]}</td><td>${esc(f[1])}</td></tr>`).join('')}</tbody></table></div></div>
+    <div class="grid2">
+      <div class="stack"><h3>Say it like this</h3>${list(i.say, 'say')}</div>
+      <div class="stack"><h3>Ask the room</h3>${list(i.ask)}</div>
+    </div>
+    <div class="stack"><h3>Misconceptions to watch for</h3>${list(i.watch)}</div>
+    <div class="grid2">
+      <div class="stack"><h3>Facilitation tips</h3>${list(i.tips)}</div>
+      <div class="stack"><h3>Materials</h3>${list(i.materials)}</div>
+    </div>
+  </div>`));
+}
+function renderTry(p, m){
+  const w = el('<div class="stack" style="gap:22px"></div>');
+  m.acts.forEach(k => {
+    const box = el(`<section class="act"><div class="act-head"><span class="label warm">Try it</span><h3>${esc(ACT_TITLES[k])}</h3></div><div class="act-body stack"></div></section>`);
+    w.appendChild(box);
+    ACT[k]($('.act-body', box));
+  });
+  p.appendChild(w);
+}
+function renderCheck(p, m){
+  if (!m.quiz){
+    p.appendChild(el(`<div class="panel stack col"><h3>Final assessment</h3><p>25 questions, 20 minutes, pass mark 70%. Sit it individually after your team has finished the capstone canvas.</p><div><a class="btn acc" href="#exam" style="text-decoration:none">Go to the final assessment</a></div></div>`));
+    return;
+  }
+  p.appendChild(el(`<p class="muted col">${m.id === 'm0' ? 'Eight quick questions to record what you know now. Not graded. You will see the answers as you go.' : 'Instant feedback on each question. Checks do not count toward your grade, but you must attempt every module check to be certified.'}</p>`));
+  const q = el('<div></div>'); p.appendChild(q);
+  practiceQuiz(q, m.quiz, m.id);
+}
+
+/* ---------- practice quiz ---------- */
+function practiceQuiz(root, qs, id){
+  root.innerHTML = '';
+  const wrap = el('<div class="quiz"></div>'); root.appendChild(wrap);
+  let answered = 0, correct = 0;
+  qs.forEach((q, qi) => {
+    const card = el(`<div class="qcard"><span class="qn">Question ${qi + 1} of ${qs.length}</span><div class="qq">${esc(q.q)}</div><div class="opts">${q.o.map((o, oi) => `<button class="opt" data-i="${oi}"><span class="k">${'ABCD'[oi]}</span><span>${esc(o)}</span></button>`).join('')}</div></div>`);
+    $$('.opt', card).forEach(b => b.addEventListener('click', () => {
+      const pick = +b.dataset.i, ok = pick === q.a;
+      $$('.opt', card).forEach(x => { x.disabled = true; const i = +x.dataset.i; if (i === q.a) x.classList.add('right'); else if (i === pick) x.classList.add('wrong'); });
+      card.appendChild(el(`<div class="fb ${ok ? 'ok' : 'no'}"><b>${ok ? 'Correct.' : 'Not quite.'}</b> ${esc(q.why)}</div>`));
+      answered++; if (ok) correct++;
+      if (answered === qs.length) finish();
+    }));
+    wrap.appendChild(card);
+  });
+  function finish(){
+    const prev = S.scores[id];
+    if (!prev || correct > prev.score) S.scores[id] = {score:correct, total:qs.length};
+    store.set('scores', S.scores); renderNav(current);
+    const box = el(`<div class="scorebox"><span class="big">${correct}/${qs.length}</span><div class="stack" style="gap:4px"><b>${correct === qs.length ? 'Full marks.' : correct >= Math.ceil(qs.length * .7) ? 'Good work.' : 'Worth another look at the notes.'}</b><span class="muted">Best score saved: ${S.scores[id].score}/${qs.length}</span></div><button class="btn ghost" style="margin-left:auto">Try again</button></div>`);
+    $('button', box).addEventListener('click', () => practiceQuiz(root, qs, id));
+    wrap.appendChild(box);
+    box.scrollIntoView({behavior: reduced() ? 'auto' : 'smooth', block:'nearest'});
+  }
+}
+
+/* ---------- activities ---------- */
+const ACT_TITLES = {
+  encounters:'AI I met this week', rulebreaker:'Rule-breaker: write rules for happy reviews', sorter:'Rules or learning?',
+  fitline:'Fit the line: cold drinks vs temperature', pixels:'Pixel detective: a tiny two-layer network', generator:'Mini generator: new store announcements',
+  buildreuse:'Build or reuse? Cost calculator', adapt:'Adaptation picker: prompt, retrieve or fine-tune?', nextword:'Next-word game: feel the temperature',
+  craft:'CRAFT prompt builder', modality:'Modality matcher', agent:'Agent run: cover Saturday’s bakery shift', compound:'Errors compound', canvas:'AI Opportunity Canvas'
+};
+const ACT = {};
+
+ACT.encounters = body => {
+  const items = [
+    ['Your phone unlocked when it saw your face',3],['Your email moved a scam message to spam',2],['Your keyboard suggested the next word',6],
+    ['A calculator app added up a bill',1],['A map estimated your arrival time from live traffic',2],['A chatbot drafted a reply for you',6],
+    ['A voice assistant set a timer when you asked',3],['An app translated a photo of a sign or menu',7],['An image generator made a picture from a sentence',4],
+    ['An assistant booked a meeting by checking several calendars',8]
+  ];
+  body.appendChild(el('<p>Tick everything you did or saw this week. Then reveal which rung of the ladder each one sits on.</p>'));
+  const list = el(`<div class="cardlist">${items.map((it, i) => `<label class="ccard" style="flex-direction:row;align-items:center;gap:12px;cursor:pointer"><input type="checkbox" id="enc${i}"><span style="flex:1">${esc(it[0])}</span><span class="pill acc" hidden>Rung ${it[1]} · ${esc(LADDER[it[1] - 1].name)}</span></label>`).join('')}</div>`);
+  body.appendChild(list);
+  const out = el('<div class="row"><button class="btn acc">Reveal the rungs</button><span class="muted" aria-live="polite"></span></div>');
+  body.appendChild(out);
+  $('button', out).addEventListener('click', () => {
+    $$('.pill', list).forEach(p => p.hidden = false);
+    const rungs = new Set(); $$('input', list).forEach((c, i) => { if (c.checked) rungs.add(items[i][1]); });
+    $('span', out).textContent = rungs.size ? `You touched ${rungs.size} of the 8 rungs this week.` : 'Tick a few items to see how many rungs you touched.';
+  });
+};
+
+ACT.rulebreaker = body => {
+  const reviews = [
+    ['Great service, the staff were friendly.',1],['Not bad at all, I’d come back.',1],['The checkout was not great.',0],
+    ['Oh great, another 40-minute queue.',0],['Loved the fresh bakery section!',1],['Helpful staff, but I won’t be back after they overcharged me.',0],
+    ['Couldn’t find anything wrong with my order.',1],['Prices were a nice surprise this week.',1],['I wanted to love this store. I didn’t.',0]
+  ];
+  body.appendChild(el('<p>Your rule: a review is <b>happy</b> if it has more happy words than unhappy words. Edit the word lists to get all nine right. Watch every fix break something else.</p>'));
+  const f = el(`<div class="grid2"><div class="field"><label for="rbPos">Happy words (comma separated)</label><input id="rbPos" value="great, friendly, loved, good, helpful"></div><div class="field"><label for="rbNeg">Unhappy words</label><input id="rbNeg" value="bad, not, wrong, queue, overcharged"></div></div>`);
+  body.appendChild(f);
+  const res = el('<div class="stack"></div>'); body.appendChild(res);
+  const words = s => s.toLowerCase().split(',').map(x => x.trim()).filter(Boolean);
+  const tok = s => s.toLowerCase().replace(/[’']/g, "'").replace(/[^a-z0-9' -]/g, ' ').split(/\s+/).filter(Boolean);
+  function run(){
+    const P = words($('#rbPos', f).value), N = words($('#rbNeg', f).value);
+    let right = 0;
+    const rows = reviews.map(r => {
+      const t = tok(r[0]); const p = t.filter(w => P.includes(w)).length, n = t.filter(w => N.includes(w)).length;
+      const verdict = p > n ? 1 : n > p ? 0 : -1; const ok = verdict === r[1]; if (ok) right++;
+      return `<tr><td>${esc(r[0])}</td><td>${r[1] ? 'Happy' : 'Unhappy'}</td><td><span class="pill ${ok ? 'ok' : 'no'}">${verdict === 1 ? 'Happy' : verdict === 0 ? 'Unhappy' : 'Can’t tell'}</span></td></tr>`;
+    }).join('');
+    res.innerHTML = `<div class="row"><span class="stat" style="flex-direction:row;gap:10px;align-items:baseline"><span class="v">${right}/9</span><span class="l">correct</span></span><span class="muted" style="flex:1;min-width:200px">${right === 9 ? 'You did it, but only for these nine. Try the next 10,000 reviews. This is why we let models learn from examples.' : 'Sarcasm, negation and mixed feelings defeat word rules. A learned model sees thousands of real reviews instead.'}</span></div>
+    <div class="tbl-wrap"><table class="mini"><thead><tr><th>Review</th><th>A person says</th><th>Your rules say</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  }
+  $$('input', f).forEach(i => i.addEventListener('input', run)); run();
+};
+
+function choiceCards(body, items, choices, intro){
+  if (intro) body.appendChild(el(`<p>${intro}</p>`));
+  const list = el('<div class="cardlist"></div>'); body.appendChild(list);
+  const score = el('<p class="muted" aria-live="polite"></p>'); body.appendChild(score);
+  let done = 0, right = 0;
+  items.forEach(it => {
+    const c = el(`<div class="ccard"><b>${esc(it.t)}</b><div class="row">${choices.map((ch, i) => `<button class="chipbtn" data-i="${i}">${esc(ch)}</button>`).join('')}</div></div>`);
+    $$('.chipbtn', c).forEach(b => b.addEventListener('click', () => {
+      const pick = +b.dataset.i, ok = pick === it.a;
+      $$('.chipbtn', c).forEach(x => { x.disabled = true; if (+x.dataset.i === it.a) x.classList.add('right'); else if (+x.dataset.i === pick) x.classList.add('wrong'); });
+      c.appendChild(el(`<div class="fb ${ok ? 'ok' : 'no'}"><b>${ok ? 'Yes.' : choices[it.a] + '.'}</b> ${esc(it.why)}</div>`));
+      done++; if (ok) right++;
+      score.textContent = `${right} of ${done} right so far` + (done === items.length ? ' · all done' : '');
+    }));
+    list.appendChild(c);
+  });
+}
+
+ACT.sorter = body => choiceCards(body, [
+  {t:'Calculate sales tax on a receipt', a:0, why:'The tax rate is known, fixed and must be exact.'},
+  {t:'Flag suspicious card transactions', a:1, why:'Fraud patterns shift constantly; a model learns from millions of past transactions.'},
+  {t:'Apply the return policy: 30 days with a receipt', a:0, why:'A clear written policy is a rule.'},
+  {t:'Recognise a product from a photo', a:1, why:'You cannot write rules for pixels; show examples instead.'},
+  {t:'Recommend products a shopper might like', a:1, why:'Preferences are learned from purchase patterns.'},
+  {t:'Convert kilograms to pounds', a:0, why:'A fixed formula.'},
+  {t:'Predict how many shoppers visit next Saturday', a:1, why:'Learned from past days, weather and promotions.'},
+  {t:'Check that a password has at least 12 characters', a:0, why:'A simple, exact check.'},
+  {t:'Transcribe a voicemail into text', a:1, why:'Speech varies endlessly; deep learning handles it.'},
+  {t:'Calculate overtime pay', a:0, why:'Legally defined, exact logic.'}
+], ['Rules','Learning'], 'For each task, choose whether you would write rules or let a model learn from examples.');
+
+ACT.fitline = body => {
+  let seed = 11; const rnd = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+  const pts = []; for (let i = 0; i < 28; i++){ const t = 18 + 22 * i / 27 + (rnd() - .5) * 1.2; pts.push([t, Math.max(10, Math.round(11.5 * t - 140 + (rnd() - .5) * 70))]); }
+  let m = 4, b = 60, busy = false;
+  body.appendChild(el('<p>Each dot is one day at a store: the temperature and how many cold drinks were sold. Move the sliders to draw the line that misses the dots least. Then let the machine do it.</p>'));
+  const wrap = el('<div class="canvas-wrap"><canvas height="320" aria-label="Scatter chart of cold drinks sold against temperature with a fitted line"></canvas></div>');
+  body.appendChild(wrap);
+  const cv = $('canvas', wrap);
+  const ctl = el(`<div class="grid2">
+    <div class="ctrl"><label for="flM">Slope: extra drinks per °C <b id="flMv"></b></label><input type="range" id="flM" min="0" max="25" step="0.5"></div>
+    <div class="ctrl"><label for="flB">Starting level <b id="flBv"></b></label><input type="range" id="flB" min="-400" max="200" step="5"></div></div>`);
+  body.appendChild(ctl);
+  const out = el(`<div class="grid3"><div class="stat"><span class="v" id="flErr"></span><span class="l">average miss, drinks per day</span></div><div class="stat"><span class="v" id="flPred"></span><span class="l">predicted sales at <input id="flT" type="number" min="10" max="45" value="36" style="width:64px;padding:2px 6px"> °C</span></div><div class="stat" style="justify-content:center"><button class="btn acc" id="flGo">Let the machine learn</button><label class="row" style="gap:6px;font-size:13.5px;margin-top:6px"><input type="checkbox" id="flRes" checked> Show misses</label></div></div>`);
+  body.appendChild(out);
+  const note = el('<p class="muted" aria-live="polite">The machine does what you just did: guess, measure the miss, nudge, repeat. It just does it hundreds of times a second.</p>'); body.appendChild(note);
+  const mae = () => pts.reduce((s, p) => s + Math.abs(m * p[0] + b - p[1]), 0) / pts.length;
+  function draw(){
+    const dpr = window.devicePixelRatio || 1, W = cv.clientWidth || 600, H = 320;
+    cv.width = W * dpr; cv.height = H * dpr; const c = cv.getContext('2d'); c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const L = 52, R = 14, T = 14, B = 40, x0 = 16, x1 = 42, y0 = 0, y1 = 400;
+    const X = t => L + (t - x0) / (x1 - x0) * (W - L - R), Y = y => T + (1 - (y - y0) / (y1 - y0)) * (H - T - B);
+    c.clearRect(0, 0, W, H); c.font = '12px ' + css('--f-mono'); c.fillStyle = css('--muted'); c.strokeStyle = css('--line'); c.lineWidth = 1;
+    for (let y = 0; y <= 400; y += 100){ c.beginPath(); c.moveTo(L, Y(y)); c.lineTo(W - R, Y(y)); c.stroke(); c.textAlign = 'right'; c.fillText(y, L - 8, Y(y) + 4); }
+    for (let t = 16; t <= 40; t += 4){ c.textAlign = 'center'; c.fillText(t + '°', X(t), H - B + 18); }
+    c.textAlign = 'left'; c.fillText('drinks sold', L + 4, T + 12); c.textAlign = 'right'; c.fillText('temperature °C', W - R, H - 6);
+    c.save(); c.beginPath(); c.rect(L, T, W - L - R, H - T - B); c.clip();
+    if ($('#flRes', out).checked){ c.strokeStyle = css('--bad'); c.globalAlpha = .45; pts.forEach(p => { c.beginPath(); c.moveTo(X(p[0]), Y(p[1])); c.lineTo(X(p[0]), Y(m * p[0] + b)); c.stroke(); }); c.globalAlpha = 1; }
+    c.strokeStyle = css('--warm'); c.lineWidth = 3; c.beginPath(); c.moveTo(X(x0), Y(m * x0 + b)); c.lineTo(X(x1), Y(m * x1 + b)); c.stroke();
+    c.fillStyle = css('--accent'); pts.forEach(p => { c.beginPath(); c.arc(X(p[0]), Y(p[1]), 4.5, 0, Math.PI * 2); c.fill(); });
+    c.restore();
+    $('#flMv', ctl).textContent = m.toFixed(1); $('#flBv', ctl).textContent = Math.round(b);
+    $('#flErr', out).textContent = Math.round(mae());
+    const t = parseFloat($('#flT', out).value) || 36; $('#flPred', out).textContent = Math.max(0, Math.round(m * t + b));
+  }
+  const sm = $('#flM', ctl), sb = $('#flB', ctl); sm.value = m; sb.value = b;
+  sm.addEventListener('input', () => { if (!busy){ m = +sm.value; draw(); } });
+  sb.addEventListener('input', () => { if (!busy){ b = +sb.value; draw(); } });
+  $('#flT', out).addEventListener('input', draw); $('#flRes', out).addEventListener('change', draw);
+  $('#flGo', out).addEventListener('click', () => {
+    if (busy) return; busy = true; const start = mae();
+    let w = m * 11, c0 = b + m * 29, k = 0; const n = pts.length;
+    const step = () => {
+      let gw = 0, gc = 0; pts.forEach(p => { const xs = (p[0] - 29) / 11, e = w * xs + c0 - p[1]; gw += 2 * e * xs / n; gc += 2 * e / n; });
+      w -= .35 * gw; c0 -= .35 * gc; m = w / 11; b = c0 - w * 29 / 11; k++;
+    };
+    const done = () => { busy = false; sm.value = m; sb.value = b; draw(); note.textContent = `After ${k} small adjustments the average miss fell from ${Math.round(start)} to ${Math.round(mae())} drinks per day. No one wrote a rule about temperature; the pattern came from the data.`; };
+    if (reduced()){ while (k < 120) step(); done(); return; }
+    const tick = () => { for (let i = 0; i < 2; i++) step(); sm.value = m; sb.value = b; draw(); if (k < 120) requestAnimationFrame(tick); else done(); };
+    tick();
+  });
+  redrawers.push(draw); requestAnimationFrame(draw);
+};
+
+ACT.pixels = body => {
+  const N = 9, cells = new Array(N * N).fill(false), C = 4;
+  const T = { V:[], H:[], D1:[], D2:[], R:[] };
+  for (let r = 0; r < N; r++) for (let c = 0; c < N; c++){
+    const i = r * N + c; if (c === C) T.V.push(i); if (r === C) T.H.push(i); if (r === c) T.D1.push(i); if (r + c === N - 1) T.D2.push(i);
+    const d = Math.hypot(r - C, c - C); if (d >= 2.6 && d <= 3.6) T.R.push(i);
+  }
+  const near = i => { const r = Math.floor(i / N), c = i % N; for (let dr = -1; dr <= 1; dr++) for (let dc = -1; dc <= 1; dc++){ const rr = r + dr, cc = c + dc; if (rr >= 0 && rr < N && cc >= 0 && cc < N && cells[rr * N + cc]) return true; } return false; };
+  const recall = t => t.filter(near).length / t.length;
+  body.appendChild(el('<p>Draw on the grid, or load a shape. <b>Layer 1</b> has six simple detectors that each look for one stroke. <b>Layer 2</b> combines their signals into a guess. Real networks have millions of units, but the idea is the same. Challenge: can you fool it?</p>'));
+  const lay = el(`<div class="pix-layout"><div class="stack"><div class="pgrid" role="grid" aria-label="Drawing grid, 9 by 9">${cells.map((_, i) => `<div data-i="${i}"></div>`).join('')}</div>
+    <div class="row">${['Plus','Cross','Circle','Messy plus','Clear'].map(x => `<button class="chipbtn" data-p="${x}">${x}</button>`).join('')}</div></div>
+    <div class="stack"><h4>Layer 1 · simple features</h4><div class="bars" id="l1"></div><h4 style="margin-top:8px">Layer 2 · the guess</h4><div class="bars" id="l2"></div><p class="muted" id="pxMsg" aria-live="polite"></p></div></div>`);
+  body.appendChild(lay);
+  const grid = $('.pgrid', lay), divs = $$('.pgrid div', lay);
+  const barRow = (lbl, v, warm) => `<div class="bar"><span>${lbl}</span><span class="tr"><i class="${warm ? 'w' : ''}" style="width:${Math.round(v * 100)}%"></i></span><span class="pct">${Math.round(v * 100)}%</span></div>`;
+  function compute(){
+    divs.forEach((d, i) => d.classList.toggle('on', cells[i]));
+    const n = cells.filter(Boolean).length;
+    const V = recall(T.V), H = recall(T.H), D1 = recall(T.D1), D2 = recall(T.D2), R = recall(T.R);
+    let cen = 0; for (let r = 3; r <= 5; r++) for (let c = 3; c <= 5; c++) if (cells[r * N + c]) cen++;
+    const Cn = Math.min(1, cen / 4);
+    $('#l1', lay).innerHTML = [['Vertical stroke', V], ['Horizontal stroke', H], ['Diagonal ↘', D1], ['Diagonal ↙', D2], ['Ring', R], ['Ink in centre', Cn]].map(x => barRow(x[0], n ? x[1] : 0)).join('');
+    if (!n){ $('#l2', lay).innerHTML = [['Plus', 0], ['Cross', 0], ['Circle', 0]].map(x => barRow(x[0], x[1], true)).join(''); $('#pxMsg', lay).textContent = 'Draw something to see the network respond.'; return; }
+    const raw = [Math.min(V, H) * Cn, Math.min(D1, D2) * Cn, R * (1 - Cn)];
+    const ex = raw.map(s => Math.exp(8 * s)), sum = ex.reduce((a, c) => a + c, 0), pr = ex.map(e => e / sum);
+    const names = ['Plus', 'Cross', 'Circle'];
+    $('#l2', lay).innerHTML = names.map((x, i) => barRow(x, pr[i], true)).join('');
+    const best = pr.indexOf(Math.max(...pr));
+    $('#pxMsg', lay).textContent = pr[best] > .6 ? `The network is fairly sure this is a ${names[best].toLowerCase()}.` : 'The network is unsure. Its features don’t clearly add up to any shape it knows.';
+  }
+  let drawing = false, paint = true;
+  const at = e => { const t = document.elementFromPoint(e.clientX, e.clientY); return t && t.parentNode === grid ? +t.dataset.i : -1; };
+  grid.addEventListener('pointerdown', e => { const i = at(e); if (i < 0) return; drawing = true; paint = !cells[i]; cells[i] = paint; try { grid.setPointerCapture(e.pointerId); } catch(_){} compute(); e.preventDefault(); });
+  grid.addEventListener('pointermove', e => { if (!drawing) return; const i = at(e); if (i >= 0 && cells[i] !== paint){ cells[i] = paint; compute(); } });
+  const stop = () => { drawing = false; }; grid.addEventListener('pointerup', stop); grid.addEventListener('pointercancel', stop);
+  $$('[data-p]', lay).forEach(b => b.addEventListener('click', () => {
+    cells.fill(false); const p = b.dataset.p;
+    if (p === 'Plus') T.V.concat(T.H).forEach(i => cells[i] = true);
+    if (p === 'Cross') T.D1.concat(T.D2).forEach(i => cells[i] = true);
+    if (p === 'Circle') T.R.forEach(i => cells[i] = true);
+    if (p === 'Messy plus'){ T.V.concat(T.H).forEach((i, k) => { if (k % 4 !== 1) cells[i] = true; }); [2, 15, 60, 70].forEach(i => cells[i] = true); }
+    compute();
+  }));
+  compute();
+};
+
+ACT.generator = body => {
+  const base = ['attention shoppers the bakery has fresh bread today','attention shoppers the store will close in fifteen minutes','fresh strawberries are on sale in the produce aisle today','the pharmacy will close early today','please bring your basket to checkout lane four','checkout lane two is now open','the bakery has warm croissants on sale','attention shoppers the produce aisle has fresh mangoes today','customer service is now open near the entrance','please visit customer service for returns','the store will open late tomorrow','warm bread is now available in the bakery','fresh flowers are on sale near the entrance','lane four is now open for express checkout'];
+  body.appendChild(el('<p>This tiny model has read only the announcements below. For each word, it learned which words tend to follow. To generate, it starts at the beginning and keeps picking a likely next word. Many results are sentences it has never seen.</p>'));
+  const out = el('<div class="panel flat stack" style="padding:16px;border:1px solid var(--line)"><div class="gen-out" aria-live="polite">Press Generate.</div><div class="row" id="gTag"></div><div class="trace" id="gTrace"></div></div>');
+  body.appendChild(out);
+  const ctl = el('<div class="row"><button class="btn acc" id="gGo">Generate</button><button class="btn ghost" id="gFive">Generate five</button></div>'); body.appendChild(ctl);
+  const five = el('<ul class="inst-list" id="gList"></ul>'); body.appendChild(five);
+  const tr = el(`<details><summary style="cursor:pointer;font-weight:700">Training text (edit it and retrain)</summary><div class="stack" style="margin-top:10px"><textarea id="gCorpus" rows="8">${base.join('\n')}</textarea><div class="row"><button class="btn ghost" id="gTrain">Retrain on this text</button><span class="muted" id="gInfo"></span></div></div></details>`);
+  body.appendChild(tr);
+  let map = {}, seen = new Set();
+  function train(){
+    const lines = $('#gCorpus', tr).value.toLowerCase().split('\n').map(s => s.replace(/[^a-z0-9' ]/g, ' ').trim().replace(/\s+/g, ' ')).filter(Boolean);
+    map = {}; seen = new Set(lines);
+    lines.forEach(l => { const w = ['^'].concat(l.split(' '), ['$']); for (let i = 0; i < w.length - 1; i++){ (map[w[i]] = map[w[i]] || []).push(w[i + 1]); } });
+    $('#gInfo', tr).textContent = `Learned from ${lines.length} sentences and ${Object.keys(map).length - 1} different words.`;
+  }
+  function gen(){
+    let w = '^'; const words = [], trace = [];
+    for (let k = 0; k < 20; k++){ const opts = map[w]; if (!opts) break; const pick = opts[Math.floor(Math.random() * opts.length)]; if (pick === '$') break; words.push(pick); trace.push([pick, new Set(opts).size]); w = pick; }
+    const s = words.join(' ');
+    return {s, trace, novel: !seen.has(s)};
+  }
+  const fmt = s => s ? s.charAt(0).toUpperCase() + s.slice(1) + '.' : '(empty)';
+  $('#gGo', ctl).addEventListener('click', () => {
+    const g = gen(); $('.gen-out', out).textContent = fmt(g.s);
+    $('#gTag', out).innerHTML = g.novel ? '<span class="pill warm">New sentence, not in the training text</span>' : '<span class="pill">Repeats a training sentence</span>';
+    $('#gTrace', out).innerHTML = g.trace.map(t => `<span title="${t[1]} possible words at this step">${esc(t[0])}<sub>${t[1]}</sub></span>`).join('') + '<span class="muted" style="background:transparent">small numbers = how many words it could have picked</span>';
+  });
+  $('#gFive', ctl).addEventListener('click', () => { five.innerHTML = Array.from({length:5}, () => { const g = gen(); return `<li>${esc(fmt(g.s))} ${g.novel ? '<span class="pill warm">new</span>' : '<span class="pill">copy</span>'}</li>`; }).join(''); });
+  $('#gTrain', tr).addEventListener('click', train);
+  train();
+};
+
+ACT.buildreuse = body => {
+  body.appendChild(el('<p>Compare building a separate model for every use case with adapting one foundation model. <b>Figures are illustrative, for discussion.</b> Replace them with your own estimates.</p>'));
+  const ctl = el(`<div class="grid2">
+    <div class="ctrl"><label for="brU">AI use cases <b id="brUv"></b></label><input type="range" id="brU" min="1" max="20" value="6"></div>
+    <div class="ctrl"><label for="brB">Bespoke model, cost each ($k) <b id="brBv"></b></label><input type="range" id="brB" min="50" max="400" step="10" value="180"></div>
+    <div class="ctrl"><label for="brA">Adapting the foundation model, cost each ($k) <b id="brAv"></b></label><input type="range" id="brA" min="5" max="100" step="5" value="20"></div>
+    <div class="ctrl"><label for="brP">Foundation model access per year ($k) <b id="brPv"></b></label><input type="range" id="brP" min="20" max="300" step="10" value="60"></div></div>`);
+  body.appendChild(ctl);
+  const out = el('<div class="stack"><div class="bars" id="brBars"></div><div class="grid3" id="brStats"></div></div>'); body.appendChild(out);
+  function upd(){
+    const u = +$('#brU', ctl).value, bc = +$('#brB', ctl).value, ac = +$('#brA', ctl).value, pc = +$('#brP', ctl).value;
+    ['U','B','A','P'].forEach(k => $('#br' + k + 'v', ctl).textContent = $('#br' + k, ctl).value);
+    const bes = u * bc, fnd = pc + u * ac, mx = Math.max(bes, fnd);
+    const row = (l, v, w) => `<div class="bar"><span>${l}</span><span class="tr"><i class="${w ? 'w' : ''}" style="width:${100 * v / mx}%"></i></span><span class="pct">$${v >= 1000 ? (v / 1000).toFixed(1) + 'm' : v + 'k'}</span></div>`;
+    $('#brBars', out).innerHTML = row('Build each', bes, true) + row('Reuse one', fnd);
+    $('#brStats', out).innerHTML = `<div class="stat"><span class="v">${fnd < bes ? Math.round(100 * (1 - fnd / bes)) + '%' : '—'}</span><span class="l">${fnd < bes ? 'cheaper to reuse' : 'reuse is not cheaper at this scale'}</span></div><div class="stat"><span class="v">~${u * 5} mo</span><span class="l">build each, one team at ~5 months per model</span></div><div class="stat"><span class="v">~${Math.ceil(u * 3 / 4)} mo</span><span class="l">reuse, ~3 weeks per adaptation</span></div>`;
+  }
+  $$('input', ctl).forEach(i => i.addEventListener('input', upd)); upd();
+};
+
+ACT.adapt = body => choiceCards(body, [
+  {t:'Make answers match our brand’s friendly tone', a:0, why:'Describe the tone and give an example in the prompt.'},
+  {t:'Answer staff questions from our 300-page HR handbook, updated monthly', a:1, why:'Facts that change belong in retrieval, not baked into the model.'},
+  {t:'Sort 50,000 support tickets into our 40 internal categories with very consistent labels', a:2, why:'High volume, a fixed niche task, and thousands of labelled examples: a fine-tuning case.'},
+  {t:'Summarise a meeting transcript into five bullet points', a:0, why:'Paste the transcript and ask. No setup needed.'},
+  {t:'Answer questions about this week’s promotions and prices', a:1, why:'Prices change weekly; look them up at question time.'},
+  {t:'Write in a specialised style learned from 10,000 approved examples', a:2, why:'A consistent niche style with lots of examples suits fine-tuning.'}
+], ['Prompting','Retrieval (RAG)','Fine-tuning'], 'Choose the lightest adaptation that would do the job.');
+
+ACT.nextword = body => {
+  const P = [
+    {p:'The store will be closed on Monday for', w:[['the holiday',.30],['maintenance',.20],['renovation',.14],['cleaning',.10],['inventory',.09],['staff training',.07],['a private event',.05],['repairs',.03],['Diwali',.015],['llama grooming',.005]]},
+    {p:'Our best-selling fruit this summer was', w:[['mangoes',.32],['watermelon',.22],['strawberries',.15],['bananas',.11],['grapes',.08],['lychees',.06],['peaches',.03],['pineapple',.015],['durian',.01],['happiness',.005]]},
+    {p:'Thank you for shopping with us. Have a', w:[['great day',.45],['nice day',.25],['wonderful evening',.12],['good one',.08],['safe trip home',.05],['lovely weekend',.04],['pleasant afternoon',.007],['sandwich',.003]]}
+  ];
+  body.appendChild(el('<p>An LLM sees a list of possible next words, each with a probability. <b>Temperature</b> reshapes that list. Low temperature almost always picks the top word. High temperature gives unlikely words a real chance.</p>'));
+  const ctl = el(`<div class="grid2"><div class="field"><label for="nwP">Prompt</label><select id="nwP">${P.map((x, i) => `<option value="${i}">${esc(x.p)} …</option>`).join('')}</select></div><div class="ctrl"><label for="nwT">Temperature <b id="nwTv">1.0</b></label><input type="range" id="nwT" min="0.1" max="2" step="0.1" value="1"></div></div>`);
+  body.appendChild(ctl);
+  const bars = el('<div class="bars"></div>'); body.appendChild(bars);
+  const act = el('<div class="row"><button class="btn acc">Generate 10 completions</button></div>'); body.appendChild(act);
+  const res = el('<div class="stack"></div>'); body.appendChild(res);
+  const dist = () => { const x = P[+$('#nwP', ctl).value], T = +$('#nwT', ctl).value; const q = x.w.map(w => Math.pow(w[1], 1 / T)); const s = q.reduce((a, c) => a + c, 0); return x.w.map((w, i) => [w[0], q[i] / s]); };
+  function upd(){ $('#nwTv', ctl).textContent = (+$('#nwT', ctl).value).toFixed(1); const d = dist(); bars.innerHTML = d.map(w => `<div class="bar"><span>${esc(w[0])}</span><span class="tr"><i style="width:${Math.max(.5, w[1] * 100)}%"></i></span><span class="pct">${(w[1] * 100).toFixed(w[1] < .01 ? 1 : 0)}%</span></div>`).join(''); res.innerHTML = ''; }
+  $$('select,input', ctl).forEach(i => i.addEventListener('input', upd));
+  $('button', act).addEventListener('click', () => {
+    const d = dist(), x = P[+$('#nwP', ctl).value], picks = [];
+    for (let k = 0; k < 10; k++){ let r = Math.random(), acc = 0, pick = d[d.length - 1][0]; for (const w of d){ acc += w[1]; if (r <= acc){ pick = w[0]; break; } } picks.push(pick); }
+    const uniq = new Set(picks).size, T = +$('#nwT', ctl).value;
+    res.innerHTML = `<ul class="inst-list">${picks.map(p => `<li>${esc(x.p)} <b>${esc(p)}</b>.</li>`).join('')}</ul><p class="muted">${uniq} different endings in 10 tries at temperature ${T.toFixed(1)}. ${T <= .4 ? 'Low temperature: consistent, ideal for policy answers.' : T >= 1.5 ? 'High temperature: varied and sometimes silly. Good for brainstorming, bad for facts.' : 'Medium temperature: some variety, mostly sensible.'}</p>`;
+  });
+  upd();
+};
+
+ACT.craft = body => {
+  const F = [['cC','Context','The situation and background facts','Our Pune store is moving Saturday opening from 8:00 to 9:00 from 12 October, because early-morning footfall is low. 40 associates are affected.'],
+    ['cR','Role','Who the model should act as','You are an HR communications specialist for a retail chain.'],
+    ['cA','Ask','The specific task','Write an email to store associates announcing the change and what it means for their shifts.'],
+    ['cF','Format','Length, structure, sections','A subject line, then under 150 words, with a three-bullet “What changes for you” section.'],
+    ['cT','Tone and limits','Voice, audience, what not to say','Warm and clear, no corporate jargon. Do not promise pay changes. End by saying to contact the store manager, Anita.']];
+  const saved = store.get('craft', {});
+  body.appendChild(el('<p>Fill in the five parts for a real task from your job, or load the example. The builder assembles the prompt and rates how complete your briefing is. Copy it into any approved AI assistant.</p>'));
+  const form = el(`<div class="stack">${F.map(f => `<div class="field"><label for="${f[0]}"><span class="mono" style="color:var(--accent)">${f[1][0]}</span> · ${f[1]}</label><small>${f[2]}</small><textarea id="${f[0]}" rows="2">${esc(saved[f[0]] || '')}</textarea></div>`).join('')}</div>`);
+  body.appendChild(form);
+  const ctl = el('<div class="row"><button class="btn ghost" id="cEx">Load example</button><button class="btn ghost" id="cClr">Clear</button><span class="pill" id="cMeter"></span></div>'); body.appendChild(ctl);
+  const out = el('<div class="stack"><pre class="prompt" id="cOut"></pre><div class="row"><button class="btn acc" id="cCopy">Copy prompt</button><span class="muted" id="cMsg" aria-live="polite"></span></div></div>'); body.appendChild(out);
+  function upd(){
+    const v = {}; F.forEach(f => v[f[0]] = $('#' + f[0], form).value.trim()); store.set('craft', v);
+    const order = ['cC','cR','cA','cF','cT'];
+    const text = order.map(k => v[k]).filter(Boolean).join('\n\n');
+    $('#cOut', out).textContent = text || 'Your assembled prompt will appear here.';
+    const n = order.filter(k => v[k].length >= 10).length;
+    const m = $('#cMeter', ctl); m.textContent = `${n} of 5 parts · ${n <= 1 ? 'Weak briefing' : n <= 3 ? 'Getting better' : n === 4 ? 'Strong' : 'Complete briefing'}`;
+    m.className = 'pill ' + (n <= 1 ? 'no' : n <= 3 ? 'warm' : 'ok');
+  }
+  $$('textarea', form).forEach(t => t.addEventListener('input', upd));
+  $('#cEx', ctl).addEventListener('click', () => { F.forEach(f => $('#' + f[0], form).value = f[3]); upd(); });
+  $('#cClr', ctl).addEventListener('click', () => { F.forEach(f => $('#' + f[0], form).value = ''); upd(); });
+  $('#cCopy', out).addEventListener('click', () => {
+    const t = $('#cOut', out).textContent, msg = $('#cMsg', out);
+    const fallback = () => { const r = document.createRange(); r.selectNodeContents($('#cOut', out)); const s = getSelection(); s.removeAllRanges(); s.addRange(r); msg.textContent = 'Selected. Press Ctrl+C or Cmd+C to copy.'; };
+    try { navigator.clipboard.writeText(t).then(() => msg.textContent = 'Copied.', fallback); } catch(e){ fallback(); }
+  });
+  upd();
+};
+
+ACT.modality = body => {
+  const M = ['Text','Image','Audio','Video'];
+  const tasks = [
+    ['Photograph a shelf and ask in writing which products are running low', ['Image','Text']],
+    ['Leave a voice note after a store visit and get a written checklist', ['Audio','Text']],
+    ['Summarise CCTV footage of a loading-dock incident as a written report', ['Video','Text']],
+    ['Read a photo of a supplier invoice and fill in the amount field', ['Image','Text']],
+    ['Hear a customer’s spoken question in Tamil and answer out loud in English', ['Audio']],
+    ['Describe a product photo aloud for a visually impaired shopper', ['Image','Audio']],
+    ['Turn a written training script into a narrated video', ['Text','Audio','Video']]
+  ];
+  body.appendChild(el('<p>For each task, tick every type of data involved, going in or coming out. Then check.</p>'));
+  const list = el('<div class="cardlist"></div>'); body.appendChild(list);
+  const score = el('<p class="muted" aria-live="polite"></p>'); body.appendChild(score);
+  let done = 0, right = 0;
+  tasks.forEach((t, ti) => {
+    const c = el(`<div class="ccard"><b>${esc(t[0])}</b><div class="row">${M.map(x => `<button class="chipbtn" aria-pressed="false" data-m="${x}">${x}</button>`).join('')}<button class="btn ghost" style="margin-left:auto;padding:6px 12px">Check</button></div></div>`);
+    $$('.chipbtn', c).forEach(b => b.addEventListener('click', () => b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') !== 'true')));
+    $('.btn', c).addEventListener('click', e => {
+      const pick = $$('.chipbtn', c).filter(b => b.getAttribute('aria-pressed') === 'true').map(b => b.dataset.m);
+      const ok = pick.length === t[1].length && t[1].every(x => pick.includes(x));
+      $$('.chipbtn', c).forEach(b => { b.disabled = true; b.classList.add(t[1].includes(b.dataset.m) ? 'right' : (pick.includes(b.dataset.m) ? 'wrong' : 'x')); });
+      e.target.disabled = true; done++; if (ok) right++;
+      c.appendChild(el(`<div class="fb ${ok ? 'ok' : 'no'}"><b>${ok ? 'Right.' : 'Answer: ' + t[1].join(' + ') + '.'}</b> ${t[1].length > 1 ? 'More than one modality, so a multimodal model fits.' : 'One modality in and out, but a multimodal model still translates meaning across languages in audio.'}</div>`));
+      score.textContent = `${right} of ${done} right` + (done === tasks.length ? ' · all done' : '');
+    });
+    list.appendChild(c);
+  });
+};
+
+ACT.agent = body => {
+  const steps = [
+    {plan:'Find out exactly which shift needs cover.', tool:'schedule.read', act:'Read Saturday’s bakery schedule.', obs:'Sam: 09:00–17:00, bakery. 8 hours. Shift is currently uncovered.', rec:'auto', why:'Read-only and harmless. Approval here only slows things down.'},
+    {plan:'List people who could cover it.', tool:'hr.skills + availability.read', act:'Find associates trained for the bakery who are not scheduled on Saturday.', obs:'Maya (32 h this week), Priya (36 h), Leo (17 years old).', rec:'auto', why:'Still read-only.'},
+    {plan:'Check rules before contacting anyone.', tool:'labour_rules.check', act:'Check overtime and labour-law limits for each candidate.', obs:'Maya: no overtime. Priya: 44 h, 4 h overtime (+$64). Leo: under 18, cannot work past 16:00. Excluded.', rec:'auto', why:'A calculation against known rules. Nothing changes in the real world.'},
+    {plan:'Contact the best candidate first.', tool:'sms.send', act:'Text Maya: “Can you cover Saturday 09:00–17:00 in the bakery? Reply YES or NO.”', obs:'Message delivered. Waiting…', rec:'approve', why:'It contacts an employee on the company’s behalf. A manager should check the wording and the choice.'},
+    {plan:'No reply after 30 minutes. Try the backup.', tool:'sms.send', act:'Text Priya the same offer, noting it includes 4 hours of overtime at +$64.', obs:'Priya replies YES.', rec:'approve', why:'It commits the company to overtime cost. Money decisions need a person.'},
+    {plan:'Make it official.', tool:'schedule.write', act:'Assign Priya to the Saturday bakery shift and record the overtime.', obs:'Schedule updated and published to the team.', rec:'approve', why:'It changes the official schedule and pay records. Hard to undo once people have seen it.'},
+    {plan:'Close the loop.', tool:'notify.send', act:'Send the store manager a summary and confirm to Sam that the shift is covered.', obs:'Summary sent. Task complete.', rec:'auto', why:'Informational and low risk. Either choice is reasonable; many teams let this run.', either:true}
+  ];
+  body.appendChild(el('<p><b>Goal:</b> Sam called in sick for Saturday’s 09:00–17:00 bakery shift. Find cover. At each step the agent shows its plan and next action. Decide whether to let it run or make it ask you first.</p>'));
+  const log = el('<div class="agent-log"></div>'); body.appendChild(log);
+  const ctl = el('<div class="row"><button class="btn ghost">Restart</button></div>'); body.appendChild(ctl);
+  let k = 0, pts = 0, choices = [];
+  function showStep(){
+    if (k >= steps.length) return summary();
+    const s = steps[k];
+    const c = el(`<div class="astep"><span class="k">Step ${k + 1} of ${steps.length} · Plan</span><div>${esc(s.plan)}</div><div><span class="tool">${esc(s.tool)}</span> ${esc(s.act)}</div><div class="row"><button class="chipbtn" data-c="auto">Let it run</button><button class="chipbtn" data-c="approve">Ask me first</button></div></div>`);
+    $$('.chipbtn', c).forEach(b => b.addEventListener('click', () => {
+      const ch = b.dataset.c, ok = s.either || ch === s.rec; if (ok) pts++; choices.push(ch);
+      $$('.chipbtn', c).forEach(x => { x.disabled = true; if (x === b) x.classList.add(ok ? 'right' : 'wrong'); });
+      c.appendChild(el(`<div><span class="k">Observe</span> ${esc(s.obs)}</div>`));
+      c.appendChild(el(`<div class="fb ${ok ? 'ok' : 'no'}"><b>${ok ? 'Good call.' : (s.rec === 'approve' ? 'This needs a person.' : 'Approval not really needed.')}</b> ${esc(s.why)}</div>`));
+      k++; showStep();
+    }));
+    log.appendChild(c);
+  }
+  function summary(){
+    const appr = choices.filter(c => c === 'approve').length;
+    log.appendChild(el(`<div class="scorebox"><span class="big">${pts}/${steps.length}</span><div class="stack" style="gap:4px"><b>You asked for approval ${appr} time${appr === 1 ? '' : 's'}.</b><span class="muted">Too many approvals and you have built a slow form. Too few and you have unmanaged risk. Put people where actions contact others, cost money, or change official records.</span></div></div>`));
+  }
+  $('button', ctl).addEventListener('click', () => { log.innerHTML = ''; k = 0; pts = 0; choices = []; showStep(); });
+  showStep();
+};
+
+ACT.compound = body => {
+  body.appendChild(el('<p>An agent’s task is a chain of steps. If any step fails, the task fails. See how quickly small error rates add up.</p>'));
+  const ctl = el(`<div class="grid2"><div class="ctrl"><label for="cpP">Reliability of each step <b id="cpPv"></b></label><input type="range" id="cpP" min="80" max="99.9" step="0.1" value="95"></div><div class="ctrl"><label for="cpN">Steps in the task <b id="cpNv"></b></label><input type="range" id="cpN" min="1" max="30" value="10"></div></div>`);
+  body.appendChild(ctl);
+  const out = el('<div class="grid3"><div class="stat"><span class="v" id="cpR"></span><span class="l">chance the whole task succeeds</span></div><div class="stat"><span class="v" id="cpF"></span><span class="l">of 100 runs have at least one error</span></div></div>');
+  body.appendChild(out);
+  const dots = el('<div class="trace" aria-hidden="true"></div>'); body.appendChild(dots);
+  function upd(){ const p = +$('#cpP', ctl).value / 100, n = +$('#cpN', ctl).value, r = Math.pow(p, n);
+    $('#cpPv', ctl).textContent = (p * 100).toFixed(1) + '%'; $('#cpNv', ctl).textContent = n;
+    $('#cpR', out).textContent = (r * 100).toFixed(r < .1 ? 1 : 0) + '%'; $('#cpF', out).textContent = Math.round((1 - r) * 100);
+    const ok = Math.round(r * 100); dots.innerHTML = Array.from({length:100}, (_, i) => `<span style="width:12px;height:12px;padding:0;border-radius:3px;background:var(${i < ok ? '--good' : '--bad-soft'})"></span>`).join('');
+  }
+  $$('input', ctl).forEach(i => i.addEventListener('input', upd)); upd();
+};
+
+ACT.canvas = body => {
+  const saved = store.get('canvas', {});
+  const F = [['kProb','Problem or opportunity','What hurts today, for whom, and how much?','Weekend understaffing in our Pune store causes long queues and about 60 lost sales hours a month.'],
+    ['kRung','Which rung of the ladder?','Pick the lowest rung that works, and say why.','Machine learning. Demand depends on patterns in footfall, weather and promotions that we cannot write as rules. An LLM is not needed.'],
+    ['kData','Data and context needed','Where it comes from, who owns it, how good it is, privacy.','Two years of hourly footfall (store systems), weather history, promotion calendar (marketing). Gaps during system outages in 2025; no personal data needed.'],
+    ['kRisk','What if it is wrong?','Failure modes, their cost, and the fallback.','Under-forecast: queues and lost sales. Over-forecast: wasted labour cost. Fallback: last year’s roster for the same week.'],
+    ['kHuman','Human checkpoint','Who approves what, and when.','The store scheduler reviews and approves every suggested roster on Wednesday before it is published.'],
+    ['kMeasure','How will we measure value?','Baseline, target, tracking.','Baseline: 60 understaffed hours a month (Q2). Target: under 25 by Q4. Track forecast error weekly.']];
+  body.appendChild(el('<p>Work in teams of three or four. Complete every box for a real problem from your work. Your draft is saved in this browser. Your instructor scores it against the rubric below.</p>'));
+  const form = el(`<div class="grid2">${F.map(f => `<div class="field"><label for="${f[0]}">${f[1]}</label><small>${f[2]}</small><textarea id="${f[0]}" rows="4">${esc(saved[f[0]] || '')}</textarea></div>`).join('')}</div>`);
+  body.appendChild(form);
+  const ctl = el('<div class="row"><button class="btn ghost" id="kEx">Load worked example</button><button class="btn ghost" id="kClr">Clear</button><span class="muted" id="kMsg"></span></div>'); body.appendChild(ctl);
+  const rub = el(`<div class="stack"><h4>Self-check against the rubric</h4><div class="tbl-wrap"><table class="mini"><thead><tr><th>Criterion</th><th>Your level</th></tr></thead><tbody>${RUBRIC.map((r, i) => `<tr><td><b>${esc(r.c)}</b></td><td><select id="kr${i}" style="width:100%"><option value="0">Choose…</option>${r.d.map((d, j) => `<option value="${j + 1}">${j + 1} · ${esc(d)}</option>`).join('')}</select></td></tr>`).join('')}</tbody></table></div><div class="row"><span class="stat" style="flex-direction:row;gap:10px;align-items:baseline"><span class="v" id="kTot">0/20</span><span class="l" id="kLvl"></span></span></div></div>`);
+  body.appendChild(rub);
+  const sv = () => { const v = {}; F.forEach(f => v[f[0]] = $('#' + f[0], form).value); RUBRIC.forEach((_, i) => v['r' + i] = $('#kr' + i, rub).value); store.set('canvas', v); };
+  function tot(){ let t = 0, all = true; RUBRIC.forEach((_, i) => { const x = +$('#kr' + i, rub).value; t += x; if (!x) all = false; });
+    $('#kTot', rub).textContent = t + '/20'; $('#kLvl', rub).textContent = !all ? 'score every criterion' : t >= 17 ? 'distinction level' : t >= 12 ? 'pass level (12 needed)' : 'below pass (12 needed)'; }
+  RUBRIC.forEach((_, i) => { const s = $('#kr' + i, rub); if (saved['r' + i]) s.value = saved['r' + i]; s.addEventListener('change', () => { tot(); sv(); }); });
+  $$('textarea', form).forEach(t => t.addEventListener('input', () => { sv(); $('#kMsg', ctl).textContent = 'Draft saved in this browser.'; }));
+  $('#kEx', ctl).addEventListener('click', () => { F.forEach(f => $('#' + f[0], form).value = f[3]); sv(); });
+  $('#kClr', ctl).addEventListener('click', () => { F.forEach(f => $('#' + f[0], form).value = ''); sv(); });
+  tot();
+};
+
+/* ---------- final exam ---------- */
+function pageExam(v){
+  const page = el(`<div class="page"><header class="mhead"><span class="eyebrow">Assessment</span><h1>Final assessment</h1>
+    <p class="lede col">25 multiple-choice questions drawn from a bank of ${Object.values(FINAL_BANK).reduce((s, a) => s + a.length, 0)}, weighted by module. 20 minutes. Pass mark 70% (18 of 25). Closed book, individual.</p></header><div id="exBody" class="stack" style="gap:18px"></div></div>`);
+  v.appendChild(page);
+  const b = $('#exBody', page);
+  const intro = () => {
+    b.innerHTML = '';
+    const bp = BLUEPRINT.map(x => `<tr><td>${modById(x[0]).code} ${esc(modById(x[0]).title)}</td><td class="num">${x[1]}</td></tr>`).join('');
+    b.appendChild(el(`<div class="grid2">
+      <div class="panel stack"><h3>Before you start</h3><ul class="inst-list"><li>Each attempt draws a fresh set of questions and shuffles the answers.</li><li>The timer counts down from 20:00 and submits automatically at zero.</li><li>You can change answers until you submit.</li><li>You get your score, a module breakdown and explanations at the end.</li><li>Trainees with an approved accommodation get 25% extra time: tick the box below.</li></ul>
+      ${S.exam ? `<p><span class="pill ${S.exam.best >= 70 ? 'ok' : 'no'}">Best so far: ${S.exam.best}%</span> <span class="muted">${S.exam.attempts} attempt${S.exam.attempts === 1 ? '' : 's'}</span></p>` : ''}
+      <label class="row" style="gap:8px"><input type="checkbox" id="exExtra"> Extra time (25 minutes)</label>
+      <div><button class="btn acc" id="exStart">Start the assessment</button></div></div>
+      <div class="panel stack"><h3>What is covered</h3><div class="tbl-wrap"><table class="mini"><thead><tr><th>Module</th><th>Questions</th></tr></thead><tbody>${bp}</tbody></table></div></div></div>`));
+    $('#exStart', b).addEventListener('click', () => start($('#exExtra', b).checked ? 25 : 20));
+  };
+  function start(mins){
+    const qs = [];
+    BLUEPRINT.forEach(([mid, n]) => shuffle(FINAL_BANK[mid]).slice(0, n).forEach(q => {
+      const opts = shuffle(q.o.map((t, i) => ({t, c: i === q.a})));
+      qs.push({mid, q:q.q, why:q.why, opts, a: opts.findIndex(o => o.c)});
+    }));
+    b.innerHTML = '';
+    let left = mins * 60;
+    const timer = el('<div class="timer"><span>Answered <b id="exAns">0</b> of 25</span><span class="num" id="exClock"></span></div>');
+    b.appendChild(timer);
+    const form = el(`<div class="quiz">${qs.map((q, i) => `<div class="qcard" id="exq${i}"><span class="qn">Question ${i + 1} of 25 · ${modById(q.mid).code}</span><div class="qq">${esc(q.q)}</div><div class="opts exam-opts">${q.opts.map((o, j) => `<label><input type="radio" name="exq${i}" value="${j}"><span>${esc(o.t)}</span></label>`).join('')}</div></div>`).join('')}</div>`);
+    b.appendChild(form);
+    const foot = el('<div class="stack"><div><button class="btn acc" id="exSubmit">Submit assessment</button></div><div id="exConfirm"></div></div>'); b.appendChild(foot);
+    const answers = () => qs.map((_, i) => { const r = $(`input[name="exq${i}"]:checked`, form); return r ? +r.value : -1; });
+    form.addEventListener('change', () => { $('#exAns', timer).textContent = answers().filter(x => x >= 0).length; });
+    const clock = () => { const mm = Math.floor(left / 60), ss = left % 60; $('#exClock', timer).textContent = mm + ':' + String(ss).padStart(2, '0'); };
+    clock();
+    window.__examTimer = setInterval(() => { left--; clock(); if (left <= 0){ clearInterval(window.__examTimer); window.__examTimer = null; finish(true); } }, 1000);
+    $('#exSubmit', foot).addEventListener('click', () => {
+      const un = answers().filter(x => x < 0).length, cf = $('#exConfirm', foot);
+      if (!un) return finish(false);
+      cf.innerHTML = ''; const box = el(`<div class="inline-confirm"><b>You have ${un} unanswered question${un === 1 ? '' : 's'}.</b><span>Unanswered questions score zero. Submit anyway?</span><div class="row"><button class="btn acc">Submit now</button><button class="btn ghost">Keep working</button></div></div>`);
+      const [yes, no] = $$('button', box); yes.addEventListener('click', () => finish(false)); no.addEventListener('click', () => cf.innerHTML = ''); cf.appendChild(box);
+    });
+    function finish(timeout){
+      if (window.__examTimer){ clearInterval(window.__examTimer); window.__examTimer = null; }
+      const ans = answers(); let score = 0; const per = {};
+      qs.forEach((q, i) => { per[q.mid] = per[q.mid] || [0, 0]; per[q.mid][1]++; if (ans[i] === q.a){ score++; per[q.mid][0]++; } });
+      const pct = Math.round(100 * score / qs.length), pass = pct >= 70;
+      const prev = S.exam || {best:0, attempts:0};
+      S.exam = {best: Math.max(prev.best, pct), last: pct, attempts: prev.attempts + 1, date: new Date().toISOString().slice(0, 10), bestDate: pct >= prev.best ? new Date().toISOString().slice(0, 10) : prev.bestDate};
+      store.set('exam', S.exam); renderNav(current);
+      b.innerHTML = '';
+      const res = el(`<div class="stack" style="gap:18px">
+        <div class="scorebox"><span class="big">${pct}%</span><div class="stack" style="gap:4px"><b>${pass ? (pct >= 90 ? 'Passed at distinction level.' : 'Passed.') : 'Not yet passed.'}</b><span class="muted">${score} of ${qs.length} correct${timeout ? ' · submitted automatically when time ran out' : ''}. Pass mark 70%.</span></div>
+        <div class="row" style="margin-left:auto">${pass ? '<a class="btn acc" href="#cert" style="text-decoration:none">Get your certificate</a>' : ''}<button class="btn ghost" id="exAgain">${pass ? 'Take it again' : 'Retake'}</button></div></div>
+        <div class="panel stack"><h3>By module</h3><div class="bars">${BLUEPRINT.map(([mid]) => { const p = per[mid]; return `<div class="bar"><span>${modById(mid).code} ${esc(modById(mid).title.split(':')[0])}</span><span class="tr"><i style="width:${100 * p[0] / p[1]}%"></i></span><span class="pct">${p[0]}/${p[1]}</span></div>`; }).join('')}</div>${!pass ? '<p class="muted">Revisit the notes for your lowest modules before retaking. Your certification rules allow one retake within 14 days.</p>' : ''}</div>
+        <h3>Review</h3>
+        <div class="quiz">${qs.map((q, i) => { const ok = ans[i] === q.a; return `<div class="qcard"><span class="qn">Question ${i + 1} · ${modById(q.mid).code}</span><div class="qq">${esc(q.q)}</div><div class="opts">${q.opts.map((o, j) => `<div class="opt ${j === q.a ? 'right' : (j === ans[i] ? 'wrong' : '')}"><span class="k">${j === q.a ? '✓' : (j === ans[i] ? '✗' : '')}</span><span>${esc(o.t)}</span></div>`).join('')}</div><div class="fb ${ok ? 'ok' : 'no'}"><b>${ok ? 'Correct.' : ans[i] < 0 ? 'Not answered.' : 'Incorrect.'}</b> ${esc(q.why)}</div></div>`; }).join('')}</div></div>`);
+      b.appendChild(res);
+      $('#exAgain', res).addEventListener('click', intro);
+      window.scrollTo(0, 0);
+    }
+  }
+  intro();
+}
+
+/* ---------- certification ---------- */
+function pageCert(v){
+  const done = CHECK_MODS.filter(m => S.scores[m.id]).length, ex = S.exam;
+  const cs = store.get('capstoneScore', ''), nm = store.get('certName', '');
+  const page = el(`<div class="page">
+  <header class="mhead"><span class="eyebrow">Certification framework</span><h1>AI Foundations Certificate</h1>
+  <p class="lede col">Certification confirms that a trainee can explain how modern AI works, place any AI product on the ladder, and plan its responsible use. It is earned through attendance, knowledge checks, an individual final assessment and a team capstone.</p></header>
+
+  <section class="stack"><h2>Three levels</h2><div class="grid3">
+    <div class="panel stack"><span class="label">Level 1</span><h3>Certificate of Attendance</h3><ul class="inst-list"><li>Attend at least 90% of the session (7 h 12 min)</li></ul></div>
+    <div class="panel stack"><span class="label acc">Level 2</span><h3>AI Foundations Certified</h3><ul class="inst-list"><li>Attendance requirement met</li><li>All eight module checks (M1–M8) attempted</li><li>Final assessment 70% or higher</li><li>Capstone canvas 12/20 or higher</li></ul></div>
+    <div class="panel stack"><span class="label warm">Level 3</span><h3>Certified with Distinction</h3><ul class="inst-list"><li>All Level 2 requirements</li><li>Final assessment 90% or higher</li><li>Capstone canvas 17/20 or higher</li></ul></div>
+  </div></section>
+
+  <section class="stack"><h2>Assessment components</h2><div class="tbl-wrap panel" style="padding:0"><table class="mini"><thead><tr><th>Component</th><th>What</th><th>When</th><th>Scored by</th><th>Requirement</th></tr></thead><tbody>
+    <tr><td><b>Pre-test</b></td><td>8 questions, baseline</td><td>M0</td><td>Self, instant</td><td>Not graded</td></tr>
+    <tr><td><b>Module checks</b></td><td>39 questions across M1–M8, instant feedback</td><td>End of each module</td><td>Self, instant</td><td>Attempt all eight</td></tr>
+    <tr><td><b>Final assessment</b></td><td>25 questions, weighted by module, 20 minutes, closed book</td><td>M9</td><td>Automatic</td><td>70% (18/25)</td></tr>
+    <tr><td><b>Capstone canvas</b></td><td>Team AI Opportunity Canvas, 5 criteria × 4 levels</td><td>M9</td><td>Instructor, within 5 working days</td><td>12/20</td></tr>
+  </tbody></table></div></section>
+
+  <section class="stack"><h2>Capstone rubric</h2><div class="tbl-wrap panel" style="padding:0"><table class="mini"><thead><tr><th>Criterion</th><th>1 · Beginning</th><th>2 · Developing</th><th>3 · Proficient</th><th>4 · Exemplary</th></tr></thead><tbody>${RUBRIC.map(r => `<tr><td><b>${esc(r.c)}</b></td>${r.d.map(d => `<td>${esc(d)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
+  <p class="muted col">Each team member receives the team’s capstone score. An instructor may adjust an individual’s score by one level where contribution was clearly unequal, and records the reason.</p></section>
+
+  <section class="grid2">
+    <div class="panel stack"><h3>Policies</h3><ul class="inst-list">
+      <li><strong>Retakes:</strong> one retake of the final assessment within 14 days, with a fresh draw of questions. Further attempts need the programme owner’s approval.</li>
+      <li><strong>Accommodations:</strong> 25% extra time on the final assessment on request; screen-reader friendly format; verbal administration by arrangement.</li>
+      <li><strong>Integrity:</strong> the final assessment is individual and closed book. The capstone is collaborative.</li>
+      <li><strong>Validity:</strong> 24 months. AI changes quickly, so renewal requires a 90-minute refresher and a 15-question update check.</li>
+      <li><strong>Appeals:</strong> raise within 10 working days to the programme owner; a second instructor re-scores the capstone.</li></ul></div>
+    <div class="panel stack"><h3>Records and evidence</h3><ul class="inst-list">
+      <li>Instructor records attendance, final score and capstone score in the training record system.</li>
+      <li>Progress in this module is saved in the trainee’s browser only. It is a convenience, not the official record.</li>
+      <li>The certificate carries a unique ID. Instructors log the ID against the trainee’s record so it can be verified.</li>
+      <li>Instructors review item statistics after each cohort and retire questions that more than 90% or fewer than 30% answer correctly.</li></ul></div>
+  </section>
+
+  <section class="stack"><h2>Your progress</h2><div class="grid3">
+    <div class="stat"><span class="v">${done}/${CHECK_MODS.length}</span><span class="l">module checks attempted</span></div>
+    <div class="stat"><span class="v">${ex ? ex.best + '%' : '—'}</span><span class="l">best final assessment score</span></div>
+    <div class="stat"><span class="v">${S.scores.m0 ? S.scores.m0.score + '/8' : '—'}</span><span class="l">pre-test (baseline)</span></div>
+  </div></section>
+
+  <section class="panel stack" id="gen"><h2>Generate your certificate</h2>
+    <p class="muted">Available once you have passed the final assessment and attempted all module checks. Enter the capstone score your instructor gave your team.</p>
+    <div class="grid2"><div class="field"><label for="ctName">Full name as it should appear</label><input id="ctName" value="${esc(nm)}" maxlength="60"></div>
+    <div class="field"><label for="ctCap">Capstone score from your instructor (out of 20)</label><input id="ctCap" type="number" min="0" max="20" value="${esc(cs)}"></div></div>
+    <div class="row"><button class="btn acc" id="ctGo">Create certificate</button><button class="btn ghost inst-only" id="ctPrev">Instructor preview</button><span id="ctMsg" class="muted" aria-live="polite"></span></div>
+    <div id="ctOut" class="stack"></div>
+  </section></div>`);
+  v.appendChild(page);
+  const msg = $('#ctMsg', page);
+  $('#ctGo', page).addEventListener('click', () => {
+    const name = $('#ctName', page).value.trim(), cap = $('#ctCap', page).value === '' ? NaN : +$('#ctCap', page).value;
+    store.set('certName', name); store.set('capstoneScore', $('#ctCap', page).value);
+    if (!name) return msg.textContent = 'Enter your name.';
+    if (!ex || ex.best < 70) return msg.textContent = 'Pass the final assessment first (70% or higher).';
+    if (done < CHECK_MODS.length) return msg.textContent = `Attempt all module checks first. ${CHECK_MODS.length - done} still to do.`;
+    if (isNaN(cap) || cap < 0 || cap > 20) return msg.textContent = 'Enter the capstone score your instructor gave you, from 0 to 20.';
+    if (cap < 12) return msg.textContent = 'The capstone needs 12/20 or more for certification. Talk to your instructor about resubmitting.';
+    msg.textContent = '';
+    drawCert($('#ctOut', page), name, ex.best, cap, ex.bestDate || ex.date, false);
+  });
+  $('#ctPrev', page).addEventListener('click', () => drawCert($('#ctOut', page), $('#ctName', page).value.trim() || 'Trainee Name', 92, 18, new Date().toISOString().slice(0, 10), true));
+}
+function drawCert(out, name, pct, cap, date, preview){
+  const dist = pct >= 90 && cap >= 17;
+  const id = 'R2A-' + date.replace(/-/g, '').slice(2) + '-' + Math.abs([...name + pct + cap].reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 7)).toString(36).toUpperCase().slice(0, 6);
+  const go = () => {
+    const W = 1600, H = 1130, cv = document.createElement('canvas'); cv.width = W; cv.height = H; const c = cv.getContext('2d');
+    const ink = '#15262B', acc = '#0C6573', warm = '#B8741A', paper = '#FBFCFA', mute = '#56696D';
+    c.fillStyle = paper; c.fillRect(0, 0, W, H);
+    c.strokeStyle = acc; c.lineWidth = 6; c.strokeRect(40, 40, W - 80, H - 80); c.lineWidth = 1.5; c.strokeRect(60, 60, W - 120, H - 120);
+    for (let i = 0; i < 8; i++){ const h = 18 + i * 9; c.fillStyle = i === 7 ? acc : '#D3E9EA'; c.fillRect(W / 2 - 4 * 26 + i * 26, 190 - h, 18, h); }
+    c.textAlign = 'center'; c.fillStyle = mute; c.font = '600 22px "JetBrains Mono", monospace'; c.fillText('AI FOUNDATIONS · FROM RULES TO AGENTS', W / 2, 250);
+    c.fillStyle = ink; c.font = '800 76px "Bricolage Grotesque", sans-serif'; c.fillText(preview ? 'Certificate (preview)' : 'Certificate of Achievement', W / 2, 350);
+    c.fillStyle = mute; c.font = '28px "Atkinson Hyperlegible", sans-serif'; c.fillText('This certifies that', W / 2, 440);
+    c.fillStyle = ink; let fs = 84; c.font = `700 ${fs}px "Bricolage Grotesque", sans-serif`; while (c.measureText(name).width > W - 300 && fs > 40){ fs -= 4; c.font = `700 ${fs}px "Bricolage Grotesque", sans-serif`; }
+    c.fillText(name, W / 2, 545);
+    c.strokeStyle = warm; c.lineWidth = 3; c.beginPath(); c.moveTo(W / 2 - 360, 580); c.lineTo(W / 2 + 360, 580); c.stroke();
+    c.fillStyle = ink; c.font = '30px "Atkinson Hyperlegible", sans-serif';
+    c.fillText('has completed the 8-hour AI Foundations course, from rule-based software', W / 2, 650);
+    c.fillText('to AI agents, and met the requirements for', W / 2, 695);
+    c.fillStyle = dist ? warm : acc; c.font = '800 46px "Bricolage Grotesque", sans-serif'; c.fillText(dist ? 'AI Foundations Certified with Distinction' : 'AI Foundations Certified', W / 2, 775);
+    c.fillStyle = mute; c.font = '24px "JetBrains Mono", monospace'; c.fillText(`Final assessment ${pct}%  ·  Capstone ${cap}/20  ·  ${date}`, W / 2, 835);
+    c.strokeStyle = ink; c.lineWidth = 1.5; [[360, 'Lead instructor'], [W - 360, 'Programme owner']].forEach(([x, l]) => { c.beginPath(); c.moveTo(x - 190, 960); c.lineTo(x + 190, 960); c.stroke(); c.fillStyle = mute; c.font = '22px "Atkinson Hyperlegible", sans-serif'; c.fillText(l, x, 995); });
+    c.fillStyle = mute; c.font = '20px "JetBrains Mono", monospace'; c.fillText('ID ' + id + ' · valid 24 months', W / 2, 995);
+    if (preview){ c.save(); c.translate(W / 2, H / 2); c.rotate(-.35); c.fillStyle = 'rgba(176,56,56,.14)'; c.font = '800 220px "Bricolage Grotesque", sans-serif'; c.fillText('SAMPLE', 0, 60); c.restore(); }
+    out.innerHTML = '';
+    const img = new Image(); img.className = 'cert-img'; img.alt = 'Certificate for ' + name; img.src = cv.toDataURL('image/png');
+    out.appendChild(img);
+    out.appendChild(el(`<p class="muted">To save it, right-click the certificate and choose “Save image as”, or long-press it on a phone. Give the ID <span class="mono">${esc(id)}</span> to your instructor so it can be logged.</p>`));
+  };
+  try { document.fonts.ready.then(go, go); } catch(e){ go(); }
+}
+
+/* ---------- boot ---------- */
+applyMode();
+route();
+})();
+</script>
+</body>
+</html>
