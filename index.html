@@ -84,10 +84,22 @@ main{padding-block:30px 90px;min-width:0}
 @media (max-width:900px){
   .shell{grid-template-columns:minmax(0,1fr);gap:0}
   .rail{display:none}
-  .mobile-nav{display:block;padding-top:14px}
+  .mobile-nav{display:flex;flex-direction:column;gap:4px;padding-bottom:6px}
+  .mobile-nav .row{justify-content:space-between}
   .mobile-nav select{width:100%}
   .brand span{display:none}
+  main{padding-block:14px 70px}
+  .topbar{position:static}
+  .topbar-in{padding:8px 16px;gap:10px}
+  .brand b{font-size:16.5px}
+  .topbar .prog{display:none}
+  .seg button{padding:4px 11px;font-size:13.5px}
+  .timer{top:env(safe-area-inset-top,0px)}
 }
+.skip{position:absolute;left:-9999px;top:8px;z-index:50;background:var(--ink);color:var(--bg);border:0;border-radius:6px;padding:8px 12px}
+.skip:focus{left:16px}
+.resume-note{background:var(--accent-soft);color:var(--ink);padding:10px 14px;border-radius:8px;font-size:15px}
+.warnline{color:var(--warm);font-size:14px}
 
 /* Page blocks */
 .page{display:flex;flex-direction:column;gap:28px}
@@ -265,10 +277,13 @@ pre.prompt{white-space:pre-wrap;font-family:var(--f-mono);font-size:13.5px;backg
 .field{display:flex;flex-direction:column;gap:5px}
 .field label{font-weight:700;font-size:14.5px}
 .field small{color:var(--muted);font-size:13px}
+@media (max-width:900px){.timer{top:env(safe-area-inset-top,0px)}}
+@media (max-width:420px){.brand b{font-size:15px}.seg button{padding:4px 9px;font-size:13px}.topbar-in{gap:6px}}
 </style>
 </head>
 <body>
 
+<button type="button" class="skip" id="skip">Skip to content</button>
 <header class="topbar"><div class="topbar-in">
   <div class="brand"><b>From Rules to Agents</b><span>AI foundations · 8-hour course</span></div>
   <div class="prog" title="Module checks completed"><span id="progTxt">0 of 8 checks</span><div class="prog-bar"><i id="progBar" style="width:0%"></i></div></div>
@@ -280,7 +295,7 @@ pre.prompt{white-space:pre-wrap;font-family:var(--f-mono);font-size:13.5px;backg
 <div class="shell">
   <nav class="rail" id="rail" aria-label="Course"></nav>
   <main id="main" tabindex="-1">
-    <div class="mobile-nav"><label class="eyebrow" for="mnav">Go to</label><select id="mnav"></select></div>
+    <div class="mobile-nav"><div class="row"><label class="eyebrow" for="mnav">Go to</label><span class="eyebrow" id="progTxt2"></span></div><select id="mnav"></select></div>
     <div id="view"></div>
   </main>
 </div>
@@ -837,30 +852,32 @@ $('#modeI').addEventListener('click', () => { S.mode = 'instructor'; store.set('
 
 /* ---------- nav ---------- */
 const PAGES = [
-  {id:'overview', label:'Course overview', group:'Start here', c:'—'},
-  {id:'plan', label:'Session plan', group:'Start here', c:'—'},
+  {id:'overview', label:'Course overview', group:'Start here', c:''},
+  {id:'plan', label:'Session plan', group:'Start here', c:''},
   ...MODULES.map(m => ({id:m.id, label:m.title.split(':')[0], group:'Modules', c:m.code, t:m.start})),
-  {id:'exam', label:'Final assessment', group:'Assessment', c:'—'},
-  {id:'cert', label:'Certification', group:'Assessment', c:'—'}
+  {id:'exam', label:'Final assessment', group:'Assessment', c:''},
+  {id:'cert', label:'Certification', group:'Assessment', c:''}
 ];
 function updateProgress(){
   const done = CHECK_MODS.filter(m => S.scores[m.id]).length;
   $('#progTxt').textContent = done + ' of ' + CHECK_MODS.length + ' checks';
   $('#progBar').style.width = (100 * done / CHECK_MODS.length) + '%';
+  $('#progTxt2').textContent = done + ' of ' + CHECK_MODS.length + ' checks done';
 }
 function renderNav(cur){
   let html = '', g = '';
   PAGES.forEach(p => {
     if (p.group !== g){ g = p.group; html += '<h4>' + g + '</h4>'; }
-    const done = (S.scores[p.id] && p.id !== 'm0') || (p.id === 'exam' && S.exam && S.exam.best >= 70);
+    const done = S.scores[p.id] || (p.id === 'exam' && S.exam && S.exam.best >= 70);
     html += '<a href="#' + p.id + '"' + (p.id === cur ? ' aria-current="page"' : '') + '><span class="c">' + p.c + '</span><span>' + esc(p.label) + '</span>' +
       (done ? '<span class="done" aria-label="done">✓</span>' : (p.t ? '<span class="t">' + p.t + '</span>' : '<span></span>')) + '</a>';
     if (BREAKS[p.id]) html += '<div class="brk">' + BREAKS[p.id].start + ' ' + BREAKS[p.id].label + '</div>';
   });
   $('#rail').innerHTML = html;
-  $('#mnav').innerHTML = PAGES.map(p => '<option value="' + p.id + '"' + (p.id === cur ? ' selected' : '') + '>' + (p.c !== '—' ? p.c + ' · ' : '') + esc(p.label) + '</option>').join('');
+  $('#mnav').innerHTML = PAGES.map(p => '<option value="' + p.id + '"' + (p.id === cur ? ' selected' : '') + '>' + (p.c ? p.c + ' · ' : '') + esc(p.label) + '</option>').join('');
   updateProgress();
 }
+$('#skip').addEventListener('click', () => { const m = $('#main'); m.focus(); m.scrollIntoView(); });
 $('#mnav').addEventListener('change', e => { location.hash = e.target.value; });
 
 let current = null;
@@ -1068,6 +1085,8 @@ function renderCheck(p, m){
     return;
   }
   p.appendChild(el(`<p class="muted col">${m.id === 'm0' ? 'Eight quick questions to record what you know now. Not graded. You will see the answers as you go.' : 'Instant feedback on each question. Checks do not count toward your grade, but you must attempt every module check to be certified.'}</p>`));
+  const best = S.scores[m.id];
+  if (best) p.appendChild(el(`<p><span class="pill ok">Done · best score ${best.score}/${best.total}</span> <span class="muted">Answer again any time; your best score is kept.</span></p>`));
   const q = el('<div></div>'); p.appendChild(q);
   practiceQuiz(q, m.quiz, m.id);
 }
@@ -1198,17 +1217,18 @@ ACT.fitline = body => {
   body.appendChild(ctl);
   const out = el(`<div class="grid3"><div class="stat"><span class="v" id="flErr"></span><span class="l">average miss, drinks per day</span></div><div class="stat"><span class="v" id="flPred"></span><span class="l">predicted sales at <input id="flT" type="number" min="10" max="45" value="36" style="width:64px;padding:2px 6px"> °C</span></div><div class="stat" style="justify-content:center"><button class="btn acc" id="flGo">Let the machine learn</button><label class="row" style="gap:6px;font-size:13.5px;margin-top:6px"><input type="checkbox" id="flRes" checked> Show misses</label></div></div>`);
   body.appendChild(out);
+  body.appendChild(el('<p class="warnline" id="flWarn" aria-live="polite"></p>'));
   const note = el('<p class="muted" aria-live="polite">The machine does what you just did: guess, measure the miss, nudge, repeat. It just does it hundreds of times a second.</p>'); body.appendChild(note);
   const mae = () => pts.reduce((s, p) => s + Math.abs(m * p[0] + b - p[1]), 0) / pts.length;
   function draw(){
     const dpr = window.devicePixelRatio || 1, W = cv.clientWidth || 600, H = 320;
     cv.width = W * dpr; cv.height = H * dpr; const c = cv.getContext('2d'); c.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const L = 52, R = 14, T = 14, B = 40, x0 = 16, x1 = 42, y0 = 0, y1 = 400;
+    const L = 52, R = 14, T = 14, B = 50, x0 = 16, x1 = 42, y0 = 0, y1 = 400;
     const X = t => L + (t - x0) / (x1 - x0) * (W - L - R), Y = y => T + (1 - (y - y0) / (y1 - y0)) * (H - T - B);
     c.clearRect(0, 0, W, H); c.font = '12px ' + css('--f-mono'); c.fillStyle = css('--muted'); c.strokeStyle = css('--line'); c.lineWidth = 1;
     for (let y = 0; y <= 400; y += 100){ c.beginPath(); c.moveTo(L, Y(y)); c.lineTo(W - R, Y(y)); c.stroke(); c.textAlign = 'right'; c.fillText(y, L - 8, Y(y) + 4); }
-    for (let t = 16; t <= 40; t += 4){ c.textAlign = 'center'; c.fillText(t + '°', X(t), H - B + 18); }
-    c.textAlign = 'left'; c.fillText('drinks sold', L + 4, T + 12); c.textAlign = 'right'; c.fillText('temperature °C', W - R, H - 6);
+    for (let t = 16; t <= 40; t += 4){ c.textAlign = 'center'; c.fillText(t + '°', X(t), H - B + 17); }
+    c.textAlign = 'left'; c.fillText('drinks sold', L + 4, T + 12); c.textAlign = 'center'; c.fillText('temperature °C', L + (W - L - R) / 2, H - 6);
     c.save(); c.beginPath(); c.rect(L, T, W - L - R, H - T - B); c.clip();
     if ($('#flRes', out).checked){ c.strokeStyle = css('--bad'); c.globalAlpha = .45; pts.forEach(p => { c.beginPath(); c.moveTo(X(p[0]), Y(p[1])); c.lineTo(X(p[0]), Y(m * p[0] + b)); c.stroke(); }); c.globalAlpha = 1; }
     c.strokeStyle = css('--warm'); c.lineWidth = 3; c.beginPath(); c.moveTo(X(x0), Y(m * x0 + b)); c.lineTo(X(x1), Y(m * x1 + b)); c.stroke();
@@ -1216,7 +1236,9 @@ ACT.fitline = body => {
     c.restore();
     $('#flMv', ctl).textContent = m.toFixed(1); $('#flBv', ctl).textContent = Math.round(b);
     $('#flErr', out).textContent = Math.round(mae());
-    const t = parseFloat($('#flT', out).value) || 36; $('#flPred', out).textContent = Math.max(0, Math.round(m * t + b));
+    const raw = $('#flT', out).value.trim(), t = parseFloat(raw), wn = $('#flWarn', body);
+    if (raw === '' || isNaN(t)){ $('#flPred', out).textContent = '—'; wn.textContent = 'Type a temperature to see the prediction.'; }
+    else { $('#flPred', out).textContent = Math.max(0, Math.round(m * t + b)); wn.textContent = (t < 18 || t > 40) ? `${t} °C is outside the 18–40 °C range this model learned from, so this prediction is a guess. Models are only reliable near the data they have seen.` : ''; }
   }
   const sm = $('#flM', ctl), sb = $('#flB', ctl); sm.value = m; sb.value = b;
   sm.addEventListener('input', () => { if (!busy){ m = +sm.value; draw(); } });
@@ -1298,7 +1320,8 @@ ACT.generator = body => {
     const lines = $('#gCorpus', tr).value.toLowerCase().split('\n').map(s => s.replace(/[^a-z0-9' ]/g, ' ').trim().replace(/\s+/g, ' ')).filter(Boolean);
     map = {}; seen = new Set(lines);
     lines.forEach(l => { const w = ['^'].concat(l.split(' '), ['$']); for (let i = 0; i < w.length - 1; i++){ (map[w[i]] = map[w[i]] || []).push(w[i + 1]); } });
-    $('#gInfo', tr).textContent = `Learned from ${lines.length} sentences and ${Object.keys(map).length - 1} different words.`;
+    const nw = new Set(lines.join(' ').split(' ').filter(Boolean)).size;
+    $('#gInfo', tr).textContent = lines.length ? `Learned from ${lines.length} sentence${lines.length === 1 ? '' : 's'} and ${nw} different words.` : 'No sentences to learn from. Add at least one, then press Retrain.';
   }
   function gen(){
     let w = '^'; const words = [], trace = [];
@@ -1307,13 +1330,15 @@ ACT.generator = body => {
     return {s, trace, novel: !seen.has(s)};
   }
   const fmt = s => s ? s.charAt(0).toUpperCase() + s.slice(1) + '.' : '(empty)';
+  const empty = () => { $('.gen-out', out).textContent = 'Nothing to generate yet.'; $('#gTag', out).innerHTML = '<span class="pill no">The model has no training text. Open “Training text”, add sentences and press Retrain.</span>'; $('#gTrace', out).innerHTML = ''; five.innerHTML = ''; };
   $('#gGo', ctl).addEventListener('click', () => {
+    if (!map['^']) return empty();
     const g = gen(); $('.gen-out', out).textContent = fmt(g.s);
     $('#gTag', out).innerHTML = g.novel ? '<span class="pill warm">New sentence, not in the training text</span>' : '<span class="pill">Repeats a training sentence</span>';
     $('#gTrace', out).innerHTML = g.trace.map(t => `<span title="${t[1]} possible words at this step">${esc(t[0])}<sub>${t[1]}</sub></span>`).join('') + '<span class="muted" style="background:transparent">small numbers = how many words it could have picked</span>';
   });
-  $('#gFive', ctl).addEventListener('click', () => { five.innerHTML = Array.from({length:5}, () => { const g = gen(); return `<li>${esc(fmt(g.s))} ${g.novel ? '<span class="pill warm">new</span>' : '<span class="pill">copy</span>'}</li>`; }).join(''); });
-  $('#gTrain', tr).addEventListener('click', train);
+  $('#gFive', ctl).addEventListener('click', () => { if (!map['^']) return empty(); five.innerHTML = Array.from({length:5}, () => { const g = gen(); return `<li>${esc(fmt(g.s))} ${g.novel ? '<span class="pill warm">new</span>' : '<span class="pill">copy</span>'}</li>`; }).join(''); });
+  $('#gTrain', tr).addEventListener('click', () => { train(); $('.gen-out', out).textContent = map['^'] ? 'Retrained. Press Generate.' : 'Nothing to generate yet.'; $('#gTag', out).innerHTML = ''; $('#gTrace', out).innerHTML = ''; five.innerHTML = ''; });
   train();
 };
 
@@ -1353,13 +1378,14 @@ ACT.nextword = body => {
     {p:'Thank you for shopping with us. Have a', w:[['great day',.45],['nice day',.25],['wonderful evening',.12],['good one',.08],['safe trip home',.05],['lovely weekend',.04],['pleasant afternoon',.007],['sandwich',.003]]}
   ];
   body.appendChild(el('<p>An LLM sees a list of possible next words, each with a probability. <b>Temperature</b> reshapes that list. Low temperature almost always picks the top word. High temperature gives unlikely words a real chance.</p>'));
-  const ctl = el(`<div class="grid2"><div class="field"><label for="nwP">Prompt</label><select id="nwP">${P.map((x, i) => `<option value="${i}">${esc(x.p)} …</option>`).join('')}</select></div><div class="ctrl"><label for="nwT">Temperature <b id="nwTv">1.0</b></label><input type="range" id="nwT" min="0.1" max="2" step="0.1" value="1"></div></div>`);
+  const ctl = el(`<div class="grid2"><div class="field"><label for="nwP">Prompt</label><select id="nwP">${P.map((x, i) => `<option value="${i}">${esc(x.p.length > 30 ? x.p.slice(0, 28).trim() + '…' : x.p + ' …')}</option>`).join('')}</select></div><div class="ctrl"><label for="nwT">Temperature <b id="nwTv">1.0</b></label><input type="range" id="nwT" min="0.1" max="2" step="0.1" value="1"></div></div>`);
   body.appendChild(ctl);
+  const shown = el('<p class="gen-out" style="font-size:19px" aria-live="polite"></p>'); body.appendChild(shown);
   const bars = el('<div class="bars"></div>'); body.appendChild(bars);
   const act = el('<div class="row"><button class="btn acc">Generate 10 completions</button></div>'); body.appendChild(act);
   const res = el('<div class="stack"></div>'); body.appendChild(res);
   const dist = () => { const x = P[+$('#nwP', ctl).value], T = +$('#nwT', ctl).value; const q = x.w.map(w => Math.pow(w[1], 1 / T)); const s = q.reduce((a, c) => a + c, 0); return x.w.map((w, i) => [w[0], q[i] / s]); };
-  function upd(){ $('#nwTv', ctl).textContent = (+$('#nwT', ctl).value).toFixed(1); const d = dist(); bars.innerHTML = d.map(w => `<div class="bar"><span>${esc(w[0])}</span><span class="tr"><i style="width:${Math.max(.5, w[1] * 100)}%"></i></span><span class="pct">${(w[1] * 100).toFixed(w[1] < .01 ? 1 : 0)}%</span></div>`).join(''); res.innerHTML = ''; }
+  function upd(){ shown.textContent = P[+$('#nwP', ctl).value].p + ' ___'; $('#nwTv', ctl).textContent = (+$('#nwT', ctl).value).toFixed(1); const d = dist(); bars.innerHTML = d.map(w => `<div class="bar"><span>${esc(w[0])}</span><span class="tr"><i style="width:${Math.max(.5, w[1] * 100)}%"></i></span><span class="pct">${(w[1] * 100).toFixed(w[1] < .01 ? 1 : 0)}%</span></div>`).join(''); res.innerHTML = ''; }
   $$('select,input', ctl).forEach(i => i.addEventListener('input', upd));
   $('button', act).addEventListener('click', () => {
     const d = dist(), x = P[+$('#nwP', ctl).value], picks = [];
@@ -1516,7 +1542,7 @@ function pageExam(v){
     b.innerHTML = '';
     const bp = BLUEPRINT.map(x => `<tr><td>${modById(x[0]).code} ${esc(modById(x[0]).title)}</td><td class="num">${x[1]}</td></tr>`).join('');
     b.appendChild(el(`<div class="grid2">
-      <div class="panel stack"><h3>Before you start</h3><ul class="inst-list"><li>Each attempt draws a fresh set of questions and shuffles the answers.</li><li>The timer counts down from 20:00 and submits automatically at zero.</li><li>You can change answers until you submit.</li><li>You get your score, a module breakdown and explanations at the end.</li><li>Trainees with an approved accommodation get 25% extra time: tick the box below.</li></ul>
+      <div class="panel stack"><h3>Before you start</h3><ul class="inst-list"><li>Each attempt draws a fresh set of questions and shuffles the answers.</li><li>The timer counts down from 20:00 and submits automatically at zero.</li><li>Your answers are saved as you go. If you leave this page or refresh, you can carry on, but the timer keeps running.</li><li>You get your score, a module breakdown and explanations at the end.</li><li>Trainees with an approved accommodation get 25% extra time: tick the box below.</li></ul>
       ${S.exam ? `<p><span class="pill ${S.exam.best >= 70 ? 'ok' : 'no'}">Best so far: ${S.exam.best}%</span> <span class="muted">${S.exam.attempts} attempt${S.exam.attempts === 1 ? '' : 's'}</span></p>` : ''}
       <label class="row" style="gap:8px"><input type="checkbox" id="exExtra"> Extra time (25 minutes)</label>
       <div><button class="btn acc" id="exStart">Start the assessment</button></div></div>
@@ -1527,47 +1553,61 @@ function pageExam(v){
     const qs = [];
     BLUEPRINT.forEach(([mid, n]) => shuffle(FINAL_BANK[mid]).slice(0, n).forEach(q => {
       const opts = shuffle(q.o.map((t, i) => ({t, c: i === q.a})));
-      qs.push({mid, q:q.q, why:q.why, opts, a: opts.findIndex(o => o.c)});
+      qs.push({mid, q:q.q, why:q.why, opts:opts.map(o => o.t), a: opts.findIndex(o => o.c)});
     }));
+    const run = {qs, ans: qs.map(() => -1), deadline: Date.now() + mins * 60000};
+    store.set('examRun', run);
+    renderRun(run, false);
+  }
+  function renderRun(run, resumed){
+    const qs = run.qs;
     b.innerHTML = '';
-    let left = mins * 60;
-    const timer = el('<div class="timer"><span>Answered <b id="exAns">0</b> of 25</span><span class="num" id="exClock"></span></div>');
+    if (resumed) b.appendChild(el('<p class="resume-note"><b>Assessment resumed.</b> Your saved answers are back. The timer kept running while you were away.</p>'));
+    const timer = el('<div class="timer"><span>Answered <b id="exAns">0</b> of 25</span><span class="num" id="exClock" aria-live="off"></span></div>');
     b.appendChild(timer);
-    const form = el(`<div class="quiz">${qs.map((q, i) => `<div class="qcard" id="exq${i}"><span class="qn">Question ${i + 1} of 25 · ${modById(q.mid).code}</span><div class="qq">${esc(q.q)}</div><div class="opts exam-opts">${q.opts.map((o, j) => `<label><input type="radio" name="exq${i}" value="${j}"><span>${esc(o.t)}</span></label>`).join('')}</div></div>`).join('')}</div>`);
+    const form = el(`<div class="quiz">${qs.map((q, i) => `<div class="qcard" id="exq${i}"><span class="qn">Question ${i + 1} of 25 · ${modById(q.mid).code}</span><div class="qq">${esc(q.q)}</div><div class="opts exam-opts">${q.opts.map((o, j) => `<label><input type="radio" name="exq${i}" value="${j}"${run.ans[i] === j ? ' checked' : ''}><span>${esc(o)}</span></label>`).join('')}</div></div>`).join('')}</div>`);
     b.appendChild(form);
     const foot = el('<div class="stack"><div><button class="btn acc" id="exSubmit">Submit assessment</button></div><div id="exConfirm"></div></div>'); b.appendChild(foot);
     const answers = () => qs.map((_, i) => { const r = $(`input[name="exq${i}"]:checked`, form); return r ? +r.value : -1; });
-    form.addEventListener('change', () => { $('#exAns', timer).textContent = answers().filter(x => x >= 0).length; });
-    const clock = () => { const mm = Math.floor(left / 60), ss = left % 60; $('#exClock', timer).textContent = mm + ':' + String(ss).padStart(2, '0'); };
+    const count = () => { $('#exAns', timer).textContent = answers().filter(x => x >= 0).length; };
+    form.addEventListener('change', () => { run.ans = answers(); store.set('examRun', run); count(); });
+    count();
+    const clock = () => { const left = Math.max(0, Math.ceil((run.deadline - Date.now()) / 1000)); const mm = Math.floor(left / 60), ss = left % 60; $('#exClock', timer).textContent = mm + ':' + String(ss).padStart(2, '0'); return left; };
     clock();
-    window.__examTimer = setInterval(() => { left--; clock(); if (left <= 0){ clearInterval(window.__examTimer); window.__examTimer = null; finish(true); } }, 1000);
+    window.__examTimer = setInterval(() => { if (clock() <= 0){ clearInterval(window.__examTimer); window.__examTimer = null; finish(run, answers(), true); } }, 1000);
     $('#exSubmit', foot).addEventListener('click', () => {
       const un = answers().filter(x => x < 0).length, cf = $('#exConfirm', foot);
-      if (!un) return finish(false);
+      if (!un) return finish(run, answers(), false);
       cf.innerHTML = ''; const box = el(`<div class="inline-confirm"><b>You have ${un} unanswered question${un === 1 ? '' : 's'}.</b><span>Unanswered questions score zero. Submit anyway?</span><div class="row"><button class="btn acc">Submit now</button><button class="btn ghost">Keep working</button></div></div>`);
-      const [yes, no] = $$('button', box); yes.addEventListener('click', () => finish(false)); no.addEventListener('click', () => cf.innerHTML = ''); cf.appendChild(box);
+      const [yes, no] = $$('button', box); yes.addEventListener('click', () => finish(run, answers(), false)); no.addEventListener('click', () => cf.innerHTML = ''); cf.appendChild(box);
     });
-    function finish(timeout){
-      if (window.__examTimer){ clearInterval(window.__examTimer); window.__examTimer = null; }
-      const ans = answers(); let score = 0; const per = {};
-      qs.forEach((q, i) => { per[q.mid] = per[q.mid] || [0, 0]; per[q.mid][1]++; if (ans[i] === q.a){ score++; per[q.mid][0]++; } });
-      const pct = Math.round(100 * score / qs.length), pass = pct >= 70;
-      const prev = S.exam || {best:0, attempts:0};
-      S.exam = {best: Math.max(prev.best, pct), last: pct, attempts: prev.attempts + 1, date: new Date().toISOString().slice(0, 10), bestDate: pct >= prev.best ? new Date().toISOString().slice(0, 10) : prev.bestDate};
-      store.set('exam', S.exam); renderNav(current);
-      b.innerHTML = '';
-      const res = el(`<div class="stack" style="gap:18px">
-        <div class="scorebox"><span class="big">${pct}%</span><div class="stack" style="gap:4px"><b>${pass ? (pct >= 90 ? 'Passed at distinction level.' : 'Passed.') : 'Not yet passed.'}</b><span class="muted">${score} of ${qs.length} correct${timeout ? ' · submitted automatically when time ran out' : ''}. Pass mark 70%.</span></div>
-        <div class="row" style="margin-left:auto">${pass ? '<a class="btn acc" href="#cert" style="text-decoration:none">Get your certificate</a>' : ''}<button class="btn ghost" id="exAgain">${pass ? 'Take it again' : 'Retake'}</button></div></div>
-        <div class="panel stack"><h3>By module</h3><div class="bars">${BLUEPRINT.map(([mid]) => { const p = per[mid]; return `<div class="bar"><span>${modById(mid).code} ${esc(modById(mid).title.split(':')[0])}</span><span class="tr"><i style="width:${100 * p[0] / p[1]}%"></i></span><span class="pct">${p[0]}/${p[1]}</span></div>`; }).join('')}</div>${!pass ? '<p class="muted">Revisit the notes for your lowest modules before retaking. Your certification rules allow one retake within 14 days.</p>' : ''}</div>
-        <h3>Review</h3>
-        <div class="quiz">${qs.map((q, i) => { const ok = ans[i] === q.a; return `<div class="qcard"><span class="qn">Question ${i + 1} · ${modById(q.mid).code}</span><div class="qq">${esc(q.q)}</div><div class="opts">${q.opts.map((o, j) => `<div class="opt ${j === q.a ? 'right' : (j === ans[i] ? 'wrong' : '')}"><span class="k">${j === q.a ? '✓' : (j === ans[i] ? '✗' : '')}</span><span>${esc(o.t)}</span></div>`).join('')}</div><div class="fb ${ok ? 'ok' : 'no'}"><b>${ok ? 'Correct.' : ans[i] < 0 ? 'Not answered.' : 'Incorrect.'}</b> ${esc(q.why)}</div></div>`; }).join('')}</div></div>`);
-      b.appendChild(res);
-      $('#exAgain', res).addEventListener('click', intro);
-      window.scrollTo(0, 0);
-    }
   }
-  intro();
+  function finish(run, ans, timeout){
+    if (window.__examTimer){ clearInterval(window.__examTimer); window.__examTimer = null; }
+    store.set('examRun', null);
+    const qs = run.qs; let score = 0; const per = {};
+    qs.forEach((q, i) => { per[q.mid] = per[q.mid] || [0, 0]; per[q.mid][1]++; if (ans[i] === q.a){ score++; per[q.mid][0]++; } });
+    const pct = Math.round(100 * score / qs.length), pass = pct >= 70;
+    const prev = S.exam || {best:0, attempts:0};
+    const today = new Date().toISOString().slice(0, 10);
+    S.exam = {best: Math.max(prev.best, pct), last: pct, attempts: prev.attempts + 1, date: today, bestDate: pct >= prev.best ? today : prev.bestDate};
+    store.set('exam', S.exam); renderNav(current);
+    b.innerHTML = '';
+    const res = el(`<div class="stack" style="gap:18px">
+      <div class="scorebox"><span class="big">${pct}%</span><div class="stack" style="gap:4px"><b>${pass ? (pct >= 90 ? 'Passed at distinction level.' : 'Passed.') : 'Not yet passed.'}</b><span class="muted">${score} of ${qs.length} correct${timeout ? ' · submitted automatically when time ran out' : ''}. Pass mark 70%.</span></div>
+      <div class="row" style="margin-left:auto">${pass ? '<a class="btn acc" href="#cert" style="text-decoration:none">Get your certificate</a>' : ''}<button class="btn ghost" id="exAgain">${pass ? 'Take it again' : 'Retake'}</button></div></div>
+      <div class="panel stack"><h3>By module</h3><div class="bars">${BLUEPRINT.map(([mid]) => { const p = per[mid]; return `<div class="bar"><span>${modById(mid).code} ${esc(modById(mid).title.split(':')[0])}</span><span class="tr"><i style="width:${100 * p[0] / p[1]}%"></i></span><span class="pct">${p[0]}/${p[1]}</span></div>`; }).join('')}</div>${!pass ? '<p class="muted">Revisit the notes for your lowest modules before retaking. Your certification rules allow one retake within 14 days.</p>' : ''}</div>
+      <h3>Review</h3>
+      <div class="quiz">${qs.map((q, i) => { const ok = ans[i] === q.a; return `<div class="qcard"><span class="qn">Question ${i + 1} · ${modById(q.mid).code}</span><div class="qq">${esc(q.q)}</div><div class="opts">${q.opts.map((o, j) => `<div class="opt ${j === q.a ? 'right' : (j === ans[i] ? 'wrong' : '')}"><span class="k">${j === q.a ? '✓' : (j === ans[i] ? '✗' : '')}</span><span>${esc(o)}</span></div>`).join('')}</div><div class="fb ${ok ? 'ok' : 'no'}"><b>${ok ? 'Correct.' : ans[i] < 0 ? 'Not answered.' : 'Incorrect.'}</b> ${esc(q.why)}</div></div>`; }).join('')}</div></div>`);
+    b.appendChild(res);
+    $('#exAgain', res).addEventListener('click', intro);
+    window.scrollTo(0, 0);
+  }
+  const run = store.get('examRun', null);
+  if (run && run.qs && run.deadline){
+    if (Date.now() >= run.deadline) finish(run, run.ans, true);
+    else renderRun(run, true);
+  } else intro();
 }
 
 /* ---------- certification ---------- */
@@ -1616,8 +1656,8 @@ function pageCert(v){
 
   <section class="panel stack" id="gen"><h2>Generate your certificate</h2>
     <p class="muted">Available once you have passed the final assessment and attempted all module checks. Enter the capstone score your instructor gave your team.</p>
-    <div class="grid2"><div class="field"><label for="ctName">Full name as it should appear</label><input id="ctName" value="${esc(nm)}" maxlength="60"></div>
-    <div class="field"><label for="ctCap">Capstone score from your instructor (out of 20)</label><input id="ctCap" type="number" min="0" max="20" value="${esc(cs)}"></div></div>
+    <div class="grid2"><div class="field"><label for="ctName">Full name as it should appear</label><input id="ctName" value="${esc(nm)}" maxlength="100" autocomplete="name"></div>
+    <div class="field"><label for="ctCap">Capstone score from your instructor (out of 20)</label><input id="ctCap" type="number" min="0" max="20" step="1" inputmode="numeric" value="${esc(cs)}"></div></div>
     <div class="row"><button class="btn acc" id="ctGo">Create certificate</button><button class="btn ghost inst-only" id="ctPrev">Instructor preview</button><span id="ctMsg" class="muted" aria-live="polite"></span></div>
     <div id="ctOut" class="stack"></div>
   </section></div>`);
@@ -1629,7 +1669,7 @@ function pageCert(v){
     if (!name) return msg.textContent = 'Enter your name.';
     if (!ex || ex.best < 70) return msg.textContent = 'Pass the final assessment first (70% or higher).';
     if (done < CHECK_MODS.length) return msg.textContent = `Attempt all module checks first. ${CHECK_MODS.length - done} still to do.`;
-    if (isNaN(cap) || cap < 0 || cap > 20) return msg.textContent = 'Enter the capstone score your instructor gave you, from 0 to 20.';
+    if (isNaN(cap) || !Number.isInteger(cap) || cap < 0 || cap > 20) return msg.textContent = 'Enter the capstone score your instructor gave you as a whole number from 0 to 20.';
     if (cap < 12) return msg.textContent = 'The capstone needs 12/20 or more for certification. Talk to your instructor about resubmitting.';
     msg.textContent = '';
     drawCert($('#ctOut', page), name, ex.best, cap, ex.bestDate || ex.date, false);
@@ -1648,9 +1688,16 @@ function drawCert(out, name, pct, cap, date, preview){
     c.textAlign = 'center'; c.fillStyle = mute; c.font = '600 22px "JetBrains Mono", monospace'; c.fillText('AI FOUNDATIONS · FROM RULES TO AGENTS', W / 2, 250);
     c.fillStyle = ink; c.font = '800 76px "Bricolage Grotesque", sans-serif'; c.fillText(preview ? 'Certificate (preview)' : 'Certificate of Achievement', W / 2, 350);
     c.fillStyle = mute; c.font = '28px "Atkinson Hyperlegible", sans-serif'; c.fillText('This certifies that', W / 2, 440);
-    c.fillStyle = ink; let fs = 84; c.font = `700 ${fs}px "Bricolage Grotesque", sans-serif`; while (c.measureText(name).width > W - 300 && fs > 40){ fs -= 4; c.font = `700 ${fs}px "Bricolage Grotesque", sans-serif`; }
-    c.fillText(name, W / 2, 545);
-    c.strokeStyle = warm; c.lineWidth = 3; c.beginPath(); c.moveTo(W / 2 - 360, 580); c.lineTo(W / 2 + 360, 580); c.stroke();
+    c.fillStyle = ink; let ulY = 580; const maxW = W - 300, setF = f => c.font = `700 ${f}px "Bricolage Grotesque", sans-serif`;
+    let fs = 84; setF(fs); while (c.measureText(name).width > maxW && fs > 52){ fs -= 4; setF(fs); }
+    if (c.measureText(name).width <= maxW) c.fillText(name, W / 2, 545);
+    else {
+      const words = name.split(/\s+/); let best = [name, ''], bd = Infinity;
+      for (let i = 1; i < words.length; i++){ const l1 = words.slice(0, i).join(' '), l2 = words.slice(i).join(' '); const d = Math.abs(c.measureText(l1).width - c.measureText(l2).width); if (d < bd){ bd = d; best = [l1, l2]; } }
+      fs = 56; setF(fs); while (Math.max(c.measureText(best[0]).width, c.measureText(best[1]).width) > maxW && fs > 24){ fs -= 2; setF(fs); }
+      c.fillText(best[0], W / 2, 505); c.fillText(best[1], W / 2, 505 + Math.round(fs * 1.05)); ulY = 505 + Math.round(fs * 1.05) + 26;
+    }
+    c.strokeStyle = warm; c.lineWidth = 3; c.beginPath(); c.moveTo(W / 2 - 360, ulY); c.lineTo(W / 2 + 360, ulY); c.stroke();
     c.fillStyle = ink; c.font = '30px "Atkinson Hyperlegible", sans-serif';
     c.fillText('has completed the 8-hour AI Foundations course, from rule-based software', W / 2, 650);
     c.fillText('to AI agents, and met the requirements for', W / 2, 695);
